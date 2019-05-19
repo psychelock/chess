@@ -26,4 +26,5 @@ namespace board
         PieceType::KING,   PieceType::QUEEN,  PieceType::ROOK,
         PieceType::BISHOP, PieceType::KNIGHT, PieceType::PAWN};
 
+
 } // namespace board

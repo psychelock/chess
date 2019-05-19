@@ -10,7 +10,7 @@ namespace board
      * on the board */
     enum class File
     {
-        A = 2,
+        A = 1,
         B,
         C,
         D,
@@ -33,7 +33,7 @@ namespace board
         SEVEN,
         EIGHT,
     };
-
+    
 
     /* Position represent a coordinate on the board */
     class Position final

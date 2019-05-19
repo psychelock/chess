@@ -1,6 +1,8 @@
 #pragma once
 
 #include <optional>
+#include <string>
+#include <iostream>
 
 #include "color.hh"
 #include "piece-type.hh"
@@ -30,6 +32,11 @@ namespace board
 
         void report_set(ReportType report) { this->report_ = report; }
 
+        friend std::ostream& operator<<(std::ostream&, const PgnMove&);
+
+        bool operator==(const PgnMove& move);
+
+
     private:
         // The original position of the piece
         const Position start_;
@@ -49,4 +56,6 @@ namespace board
         // type of report given by the pgn file
         ReportType report_;
     };
+
+    std::ostream& operator<<(std::ostream&, const PgnMove&);
 } // namespace board

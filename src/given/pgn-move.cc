@@ -1,4 +1,5 @@
 #include "pgn-move.hh"
+#include "../tools.hh"
 
 namespace board
 {
@@ -42,6 +43,24 @@ namespace board
             return queen_side ? w_big : w_small;
 
         return queen_side ? b_big : b_small;
+    }
+
+    std::ostream& operator<<(std::ostream& o, const PgnMove& move)
+    {
+        char file = get_file(move.start_.file_get());
+        int rank = utils::utype(move.start_.rank_get());
+        char file1 = get_file(move.end_.file_get());
+        int rank1 = utils::utype(move.end_.rank_get());
+        return o << "Piece: " << tools::get_char(move.piece_) << "  From: " << file \
+            << rank << "  To: " << file1\
+            << rank1 << "\n";
+    }
+
+    bool PgnMove::operator==(const PgnMove& rhs)
+    {
+        return this->start_ == rhs.start_ && this->end_ == rhs.end_ && \
+                this->capture_ == rhs.capture_ && this->report_ == rhs.report_ \
+                && this->piece_ == rhs.piece_ && this->promotion_ == rhs.promotion_;
     }
 
 

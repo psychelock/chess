@@ -17,5 +17,5 @@ set(sources ${sources}
         src/given/utype.hh
         src/board.hh
         src/board.cc
-        src/main.cc
+        src/tools.cc
    )

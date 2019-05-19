@@ -4,9 +4,9 @@
 #include "given/listener.hh"
 #include <boost/program_options.hpp>
 #include <dlfcn.h>
-
+#include "tools.hh"
 constexpr char init_setup[] = \
-                            "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr";
+                            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
 namespace po = boost::program_options;
 
@@ -46,7 +46,10 @@ int main (int argc, char *argv[])
             void * create = dlsym(handle, "listener_create");
                 listener::Listener *lis = reinterpret_cast<listener::Listener*(*)()>(create)();
             lis->register_board(game);
+            free(lis);
             game.dump_board();
+            game.possible_moves();
+            tools::dump_board_from_fen(init_setup);
             dlclose(handle);
 
         }
