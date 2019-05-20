@@ -15,9 +15,9 @@
 
 namespace board
 {
+    using board_t = std::map<int, std::optional<std::pair<PieceType, Color>>>;
     class ChessBoard : public ChessboardInterface
     {
-        using board_t = std::map<int, opt_piece_t>;
         private:
             board_t board_;
             Color turn_;
@@ -34,11 +34,14 @@ namespace board
             bool valid_move(const PgnMove&);
             std::list<PgnMove> possible_moves(void);
             void set_turn(Color);
+            void print_possible_moves(const std::list<PgnMove>& moves);
+            bool is_check(board_t& , Color kingcolor);
+            bool is_checkmove(PgnMove move, board_t board, Color turn);
+
             int perft_score(int depth);
-            void do_move(PgnMove);
+            void do_move(board_t&, PgnMove);
             void undo_move(PgnMove);
             void create_board(std::string);
-            void print_possible_moves(const std::list<PgnMove>& moves);
 
             opt_piece_t operator[](const Position& position) const;
 

@@ -102,4 +102,10 @@ namespace tools
         
         return Position(f,r);
     }
+    int get_index(Position p)
+    {
+        int file = utils::utype(p.file_get());
+        int rank = utils::utype(p.rank_get());
+        return (rank + 1) * 10 + file;
+    }
 }

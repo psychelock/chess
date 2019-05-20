@@ -59,7 +59,7 @@ namespace board
     bool PgnMove::operator==(const PgnMove& rhs)
     {
         return this->start_ == rhs.start_ && this->end_ == rhs.end_ && \
-                this->capture_ == rhs.capture_ && this->report_ == rhs.report_ \
+                this->capture_ == rhs.capture_ \
                 && this->piece_ == rhs.piece_ && this->promotion_ == rhs.promotion_;
     }
 

@@ -4,7 +4,7 @@ constexpr int direction[6] = {8, 8, 4, 4, 8, 0};
 
 constexpr int offset[6][8] = \
 {
-    { -11, -10, -9, -1, 1,  9, 10, 11 },  /* KING */
+    { -11, -10, -9, -1, 1,  9, 10, 11 }, /* KING */
         { -11, -10, -9, -1, 1,  9, 10, 11 }, /* QUEEN */
         { -10,  -1,  1, 10, 0,  0,  0,  0 }, /* ROOK */
         { -11,  -9,  9, 11, 0,  0,  0,  0 }, /* BISHOP */
@@ -12,8 +12,17 @@ constexpr int offset[6][8] = \
         {   0,   0,  0,  0, 0,  0,  0,  0 }
 };
 
+constexpr bool slide[6] = { false, true, true, true, false, false };
+
 namespace board
 {
+    bool ChessBoard::is_checkmove(PgnMove move, board_t board, Color turn)
+    {
+        board_t copy = board;
+        do_move(copy, move);
+        return is_check(copy, turn);
+    }
+
     ChessBoard::ChessBoard(std::string setup)
     {
         turn_ = Color::WHITE;
@@ -121,7 +130,21 @@ namespace board
     {
         auto moves = possible_moves();
         auto it =  std::find(moves.begin(), moves.end(), move);
-        return it != moves.end();
+        if(it != moves.end())
+        {
+            if (is_checkmove(move, board_, turn_))
+                return false;
+
+            Color oppcol = (turn_ == Color::WHITE) ? Color::BLACK : Color::WHITE;
+
+            if(is_checkmove(move, board_, oppcol))
+            {
+                (*it).report_set(ReportType::CHECK);
+                return move.get_report() == ReportType::CHECK;
+            }
+            return move.get_report() == ReportType::NONE; // not a check
+        }
+        return false;
     }
 
 
@@ -166,9 +189,7 @@ namespace board
                                     ReportType::NONE);
 
                             moves.insert(moves.end(), currentmove);
-                        }while((pt == PieceType::BISHOP ||  \
-                                pt == PieceType::ROOK || pt == PieceType::QUEEN \
-                               ) && (capture == false));
+                        }while(slide[piece_num] && (capture == false));
                     }
                 }
                 else
@@ -191,5 +212,76 @@ namespace board
     {
         turn_ = color;
     }
+
+    static bool is_check_aux(int pos, const board_t& board, int dir, \
+            const Color kingcolor, int number)
+    {
+        bool check = false;
+        int dest_int = pos ;
+        int count = 0;
+        do
+        {
+            count ++;
+            dest_int += offset[number][dir];
+            auto to = tools::get_position(dest_int);
+            if(to == std::nullopt)
+                return false;
+            else if(board.at(dest_int) != std::nullopt)
+            {
+                if(board.at(dest_int)->second == kingcolor)     // same piece
+                    break;
+                auto pt = board.at(dest_int)->first;          //  enemy piece after here
+                int pnum = utils::utype(pt);
+                // stop after first case for king
+                int direc = offset[number][dir];                // everything else 
+                if(std::find(&offset[pnum][0], &offset[pnum][0]+8, direc)\
+                        != &offset[pnum][0]+8)
+                {
+                    if(pnum == 0)
+                        return count == 1;
+                    check = true;
+                }
+                break;
+            }
+        }while(number == 1); /*number is 0  for kings directions */
+        return check;
+    }
+
+    bool ChessBoard::is_check(board_t& board, Color kingcolor)
+    {
+        bool check = false;
+        for(auto const&[pos, piece] : board)
+        {
+            if(piece != std::nullopt)
+            {
+                if(piece->first == PieceType::KING && piece->second == kingcolor)
+                {
+                    for(int dir = 0; dir < 8; dir++)
+                    {
+                        if(check)
+                            return true;
+                        check = check ||  is_check_aux(pos, board, dir, kingcolor, 1);
+                        check = check ||  is_check_aux(pos, board, dir, kingcolor, 4);
+                        // pawn 
+                        // 
+                    }
+                    return check;
+                }
+            }
+        }
+        return false;
+    }
+
+    void ChessBoard::do_move(board_t& board, PgnMove move)
+    {
+        auto from = move.get_start();
+        auto to = move.get_end();
+
+        auto res = board[tools::get_index(from)];
+        board[tools::get_index(from)] = std::nullopt;
+        board[tools::get_index(to)] = res;
+        //FIXME handle special cases later;
+    }
+
 
 }

@@ -31,6 +31,13 @@ namespace board
         static PgnMove generate_castling(bool queen_side, Color color);
 
         void report_set(ReportType report) { this->report_ = report; }
+        
+        Position get_start(void)       const   { return start_;}
+        Position get_end(void)         const   { return end_; }
+        bool get_capture(void)         const   { return capture_; }
+        PieceType get_piece(void)      const   { return piece_; }
+        ReportType get_report(void)    const   { return report_; }
+        opt_piece_t get_promotion(void) const  { return promotion_; }
 
         friend std::ostream& operator<<(std::ostream&, const PgnMove&);
 

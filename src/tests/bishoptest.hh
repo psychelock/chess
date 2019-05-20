@@ -1,15 +1,14 @@
-#include <chrono>
 #include <iostream>
 #include "gtest/gtest.h"
-#include "given/pgn-move.hh"
-#include "given/chessboard-interface.hh"
-#include "board.hh"
-#include "tools.hh"
+#include "../given/pgn-move.hh"
+#include "../given/chessboard-interface.hh"
+#include "../board.hh"
+#include "../tools.hh"
 
 
 namespace test
 {
-    constexpr char setup[] = "B7/8/2n2r2/8/3Bb3/8/1R4P1/b7";
+    constexpr char setup[] = "B3k3/8/2n2r2/8/3Bb3/8/1R2K1P1/b7";
 
     TEST(Board, BoardSetup)
     {
@@ -68,14 +67,10 @@ namespace test
         PgnMove tmp2 = tools::create_pgnmove (File::E, Rank::FOUR, File::G, \
                 Rank::TWO, PieceType::BISHOP,\
                 true, ReportType::NONE, nnull);
-        PgnMove tmp3 = tools::create_pgnmove (File::A, Rank::EIGHT, File::C, \
-                Rank::SIX, PieceType::BISHOP,\
-                true, ReportType::NONE, nnull);
         PgnMove tmp4 = tools::create_pgnmove (File::D, Rank::FOUR, File::F, \
                 Rank::SIX, PieceType::BISHOP,\
                 true, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp3), true);
         ASSERT_EQ(game.valid_move(tmp4), true);
 
         game.set_turn(Color::BLACK);
@@ -157,11 +152,25 @@ namespace test
 
     }
 
+    TEST(BishopTest, Check)
+    { 
+        ChessBoard game(setup);
+        std::optional<PieceType> nnull = std::nullopt;
 
-
-    int main (int argc, char *argv[])
-    {
-        testing::InitGoogleTest(&argc, argv);
-        return RUN_ALL_TESTS();
+        PgnMove tmp1 = tools::create_pgnmove (File::A, Rank::EIGHT, File::C, \
+                Rank::SIX, PieceType::BISHOP,\
+                true, ReportType::CHECK, nnull);
+        PgnMove tmp2 = tools::create_pgnmove (File::E, Rank::FOUR, File::D, \
+                Rank::THREE, PieceType::BISHOP,\
+                false, ReportType::CHECK, nnull);
+        PgnMove tmp3 = tools::create_pgnmove (File::E, Rank::FOUR, File::F, \
+                Rank::THREE, PieceType::BISHOP,\
+                false, ReportType::CHECK, nnull);
+        ASSERT_EQ(game.valid_move(tmp1), true);
+        game.set_turn(Color::BLACK);
+        ASSERT_EQ(game.valid_move(tmp2), true);
+        ASSERT_EQ(game.valid_move(tmp3), true);
     }
+
+
 }

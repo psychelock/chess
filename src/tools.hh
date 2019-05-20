@@ -12,4 +12,5 @@ namespace tools
             bool capture, ReportType report, PgnMove::opt_piece_t& promotion);
     std::optional<Position> get_position(int);
     char get_char(PieceType p);
+    int get_index(Position p);
 }

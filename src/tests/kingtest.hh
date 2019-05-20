@@ -1,0 +1,139 @@
+#include <iostream>
+#include "gtest/gtest.h"
+#include "../given/pgn-move.hh"
+#include "../given/chessboard-interface.hh"
+#include "../board.hh"
+#include "../tools.hh"
+
+
+namespace test
+{
+    constexpr char setupking[] = "P4B2/1k2q1b1/8/6Rp/1r1Q3K/8/1R3p2/8";
+
+    TEST(Boardking, BoardSetup)
+    {
+        ChessBoard game(setupking);
+        ASSERT_EQ(game.dump_board(), tools::dump_board_from_fen(setupking));
+
+    }
+    TEST(KingTest, ValidMoves) 
+    {
+        ChessBoard game(setupking);
+        std::optional<PieceType> nnull = std::nullopt;
+
+        PgnMove tmp1 = tools::create_pgnmove (File::H, Rank::FOUR, File::G, \
+                Rank::FOUR, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+        PgnMove tmp2 = tools::create_pgnmove (File::H, Rank::FOUR, File::H, \
+                Rank::THREE, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+        
+        PgnMove tmp3 = tools::create_pgnmove (File::H, Rank::FOUR, File::G, \
+                Rank::THREE, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+        PgnMove tmp7 = tools::create_pgnmove (File::B, Rank::SEVEN, File::C, \
+                Rank::EIGHT, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+        PgnMove tmp8 = tools::create_pgnmove (File::B, Rank::SEVEN, File::C, \
+                Rank::SEVEN, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+        PgnMove tmp9 = tools::create_pgnmove (File::B, Rank::SEVEN, File::C, \
+                Rank::SIX, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+
+        ASSERT_EQ(game.valid_move(tmp1), true);
+        ASSERT_EQ(game.valid_move(tmp2), true);
+        ASSERT_EQ(game.valid_move(tmp3), true);
+
+        game.set_turn(Color::BLACK);
+/*        std::cout << "\n";
+        game.print_possible_moves(game.possible_moves());
+        std::cout << "\n";*/
+
+        ASSERT_EQ(game.valid_move(tmp7), true);
+        ASSERT_EQ(game.valid_move(tmp8), true);
+        ASSERT_EQ(game.valid_move(tmp9), true);
+    
+    }
+    
+
+    TEST(KingTest, CaptureMoves) 
+    {
+        ChessBoard game(setupking);
+        std::optional<PieceType> nnull = std::nullopt;
+        
+        PgnMove tmp1 = tools::create_pgnmove (File::H, Rank::FOUR, File::H, \
+                Rank::FIVE, PieceType::KING,\
+                true, ReportType::NONE, nnull);
+        PgnMove tmp2 = tools::create_pgnmove (File::B, Rank::SEVEN, File::A, \
+                Rank::EIGHT, PieceType::KING,\
+                true, ReportType::NONE, nnull);
+        PgnMove tmp5 = tools::create_pgnmove (File::B, Rank::SEVEN, File::A, \
+                Rank::EIGHT, PieceType::KING,\
+                true, ReportType::NONE, nnull);
+
+        ASSERT_EQ(game.valid_move(tmp1), true);
+        game.set_turn(Color::BLACK);
+        ASSERT_EQ(game.valid_move(tmp2), true);
+        ASSERT_EQ(game.valid_move(tmp5), true);
+
+    }
+
+    TEST(KingTest, InvalidMoves) 
+    {
+        ChessBoard game(setupking);
+        std::optional<PieceType> nnull = std::nullopt;
+
+        PgnMove tmp1 = tools::create_pgnmove (File::H, Rank::FOUR, File::G, \
+                Rank::FIVE, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+        
+        PgnMove tmp2 = tools::create_pgnmove (File::B, Rank::SEVEN, File::A, \
+                Rank::SEVEN, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+        PgnMove tmp3 = tools::create_pgnmove (File::B, Rank::SEVEN, File::B, \
+                Rank::SIX, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+
+        ASSERT_EQ(game.valid_move(tmp1), false);
+
+        game.set_turn(Color::BLACK);
+
+        ASSERT_EQ(game.valid_move(tmp2), false);
+        ASSERT_EQ(game.valid_move(tmp3), false);
+    }
+
+    TEST(KingTest, RandomMoves) 
+    {
+        ChessBoard game(setupking);
+        std::optional<PieceType> nnull = std::nullopt;
+
+        PgnMove tmp1 = tools::create_pgnmove (File::H, Rank::FOUR, File::B, \
+                Rank::ONE, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+        PgnMove tmp2 = tools::create_pgnmove (File::H, Rank::FOUR, File::A, \
+                Rank::TWO, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+        PgnMove tmp3 = tools::create_pgnmove (File::H, Rank::FOUR, File::A, \
+                Rank::ONE, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+        PgnMove tmp4 = tools::create_pgnmove (File::B, Rank::SEVEN, File::A, \
+                Rank::ONE, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+        PgnMove tmp5 = tools::create_pgnmove (File::B, Rank::SEVEN, File::G, \
+                Rank::SEVEN, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+        PgnMove tmp6 = tools::create_pgnmove (File::B, Rank::SEVEN, File::H, \
+                Rank::TWO, PieceType::KING,\
+                false, ReportType::NONE, nnull);
+    
+        ASSERT_EQ(game.valid_move(tmp1), false);
+        ASSERT_EQ(game.valid_move(tmp2), false);
+        ASSERT_EQ(game.valid_move(tmp3), false);
+        ASSERT_EQ(game.valid_move(tmp4), false);
+        ASSERT_EQ(game.valid_move(tmp5), false);
+        ASSERT_EQ(game.valid_move(tmp6), false);
+
+    }
+
+}
