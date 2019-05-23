@@ -4,14 +4,11 @@ Basic Moves
     Pawn, King
 
 Special moves
-    Check, Checkmate, En-passant, Promotion
+    Checkmate, En-passant, Promotion
 
 Listener
 
 Do_move
 
-
-
 Tests
-    Discover checks, illegal move -> leads to check
     Checkmate, Pawns
