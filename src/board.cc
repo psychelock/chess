@@ -9,10 +9,13 @@ constexpr int offset[6][8] = \
         { -10,  -1,  1, 10, 0,  0,  0,  0 }, /* ROOK */
         { -11,  -9,  9, 11, 0,  0,  0,  0 }, /* BISHOP */
         { -21, -19,-12, -8, 8, 12, 19, 21 }, /* KNIGHT */
-        {   0,   0,  0,  0, 0,  0,  0,  0 }
+        {   -11,   -9,  9,  11, 0,  0,  0,  0 } // only the capture directions here!
 };
 
 constexpr bool slide[6] = { false, true, true, true, false, false };
+
+constexpr int pawndir[4] = { 9,10,11,20};
+
 
 namespace board
 {
@@ -151,7 +154,8 @@ namespace board
     std::list<PgnMove> ChessBoard::possible_moves(void)
     {
         std::list<PgnMove> moves;
-        bool capture;
+        bool capture = false;
+        int dest_int;
         for(auto const& [pos, piece] : board_)
         {
             if(piece != std::nullopt && piece->second == turn_)
@@ -163,7 +167,7 @@ namespace board
                     for(int dir = 0; dir < direction[piece_num]; dir++)     
                         // each direction the piece can move
                     {
-                        int dest_int = pos;
+                        dest_int = pos;
                         do
                         {
                             capture = false;
@@ -193,8 +197,47 @@ namespace board
                     }
                 }
                 else
-                    continue;
-                // add pawn moves here
+                {
+                    int white = piece->second == Color::WHITE ? 1 : -1;
+                    dest_int = pos;
+                    for(int i : pawndir)
+                    {
+                        capture = false;
+                       if(i == 20)
+                       {
+                            if(turn_ == Color::WHITE)
+                            {
+                                if(!(pos >30 && pos < 40))
+                                    break;
+                            }
+                            else if(turn_ == Color::BLACK)
+                            {
+                                if(!(pos >80 && pos < 90))
+                                    break;
+                            }
+                       }
+                       dest_int = pos + i * white;  
+                       std::optional<Position> to = tools::get_position(dest_int);
+                       if(to == std::nullopt) // out of bounds
+                           continue;
+                       auto dest_piece = board_[dest_int]; // optional pair of piece type and color
+                       if(i%10 == 0 && dest_piece != std::nullopt)  // pawan cant move forward
+                            continue;
+                       else if(i%10 != 0)
+                       {
+                            if(dest_piece == std::nullopt || dest_piece->second == turn_)
+                                continue;
+                            capture = true;
+                       }
+                       auto from  = tools::get_position(pos);
+                       PgnMove currentmove(from.value(), to.value(), pt, capture, \
+                               ReportType::NONE);
+
+                       moves.insert(moves.end(), currentmove);
+
+                    }
+                    
+                }
             }
         }
         return moves;
@@ -206,6 +249,20 @@ namespace board
         {
             std::cout << move;
         }
+    }
+
+    void ChessBoard::set_turn(Color color)
+    {
+        turn_ = color;
+    }
+
+    static bool is_check_pawn(int dir, Color king)
+    {
+        if(king == Color::WHITE && dir > 0)
+            return true;
+        else if( king == Color::BLACK && dir < 0)
+            return true;
+        return false;
     }
 
     static bool is_check_aux(int pos, const board_t& board, int dir, \
@@ -227,20 +284,23 @@ namespace board
                     break;
                 auto pt = board.at(dest_int)->first;          //  enemy piece after here
                 int pnum = utils::utype(pt);
+                int direc = offset[number][dir];            
                 // stop after first case for king
-                int direc = offset[number][dir];                // everything else 
-                if(std::find(&offset[pnum][0], &offset[pnum][0]+8, direc)\
-                        != &offset[pnum][0]+8)
+                if(std::find(&offset[pnum][0], &offset[pnum][0]+8, direc) \
+                         != &offset[pnum][0]+8)                        // checks by everything else
                 {
-                    if(pnum == 0)
+                    if(pnum == 0)       // 'checks' by king
                         return count == 1;
+                    if(pt == PieceType::PAWN)                       // checks by pawn           
+                        return count == 1 && is_check_pawn(direc, kingcolor);
                     check = true;
                 }
                 break;
             }
-        }while(number == 1); /*number is 0  for kings directions */
+        }while(number == 1); /*number is 1 for 'queens' directions */
         return check;
     }
+
 
     bool ChessBoard::is_check(board_t& board, Color kingcolor)
     {
@@ -255,10 +315,8 @@ namespace board
                     {
                         if(check)
                             return true;
-                        check = check ||  is_check_aux(pos, board, dir, kingcolor, 1);
-                        check = check ||  is_check_aux(pos, board, dir, kingcolor, 4);
-                        // pawn 
-                        // 
+                        check = check ||  is_check_aux(pos, board, dir, kingcolor, 1); // for other pieces
+                        check = check ||  is_check_aux(pos, board, dir, kingcolor, 4); // for knight
                     }
                     return check;
                 }

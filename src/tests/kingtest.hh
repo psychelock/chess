@@ -10,20 +10,20 @@ namespace test
 {
     constexpr char setupking[] = "P4B2/1k2q1b1/8/6Rp/1r1Q3K/8/1R3p2/8";
 
-    TEST(Boardking, BoardSetup)
+    TEST(BoardKing, BoardSetup)
     {
         ChessBoard game(setupking);
         ASSERT_EQ(game.dump_board(), tools::dump_board_from_fen(setupking));
-
     }
+
     TEST(KingTest, ValidMoves) 
     {
         ChessBoard game(setupking);
         std::optional<PieceType> nnull = std::nullopt;
 
-        PgnMove tmp1 = tools::create_pgnmove (File::H, Rank::FOUR, File::G, \
-                Rank::FOUR, PieceType::KING,\
-                false, ReportType::NONE, nnull);
+        PgnMove tmp1 = tools::create_pgnmove (File::H, Rank::FOUR, File::H, \
+                Rank::FIVE, PieceType::KING,\
+                true, ReportType::NONE, nnull);
         PgnMove tmp2 = tools::create_pgnmove (File::H, Rank::FOUR, File::H, \
                 Rank::THREE, PieceType::KING,\
                 false, ReportType::NONE, nnull);
@@ -41,14 +41,17 @@ namespace test
                 Rank::SIX, PieceType::KING,\
                 false, ReportType::NONE, nnull);
 
+/*
+        std::cout << "\n";
+        game.print_possible_moves(game.possible_moves());
+        std::cout << "\n";
+        */
+
         ASSERT_EQ(game.valid_move(tmp1), true);
         ASSERT_EQ(game.valid_move(tmp2), true);
         ASSERT_EQ(game.valid_move(tmp3), true);
 
         game.set_turn(Color::BLACK);
-/*        std::cout << "\n";
-        game.print_possible_moves(game.possible_moves());
-        std::cout << "\n";*/
 
         ASSERT_EQ(game.valid_move(tmp7), true);
         ASSERT_EQ(game.valid_move(tmp8), true);

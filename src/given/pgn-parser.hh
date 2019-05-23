@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include "pgn-move.hh"
 #include "report-type.hh"
 

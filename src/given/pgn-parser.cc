@@ -3,6 +3,7 @@
 #include <fstream>
 #include <regex>
 
+
 #include "pgn-exception.hh"
 
 namespace pgn_parser
@@ -121,7 +122,7 @@ namespace pgn_parser
 
         while (pgn >> token)
         {
-            std::stringstream ss{token};
+            std::stringstream ss(token);
             std::string sub_token;
 
             while (std::getline(ss, sub_token, '.'))

@@ -21,9 +21,11 @@ namespace test
         ChessBoard game(setup);
         std::optional<PieceType> nnull = std::nullopt;
 
+/*
         std::cout << "\n";
         game.print_possible_moves(game.possible_moves());
         std::cout << "\n";
+        */
 
         PgnMove tmp1 = tools::create_pgnmove (File::A, Rank::EIGHT, File::B, \
                 Rank::SEVEN, PieceType::BISHOP,\
@@ -45,9 +47,11 @@ namespace test
         ASSERT_EQ(game.valid_move(tmp2), true);
 
         game.set_turn(Color::BLACK);
+        /*
         std::cout << "\n";
         game.print_possible_moves(game.possible_moves());
         std::cout << "\n";
+        */
 
         ASSERT_EQ(game.valid_move(tmp3), true);
         ASSERT_EQ(game.valid_move(tmp4), true);

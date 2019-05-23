@@ -81,9 +81,11 @@ namespace test
         ChessBoard game(setupqueen);
         std::optional<PieceType> nnull = std::nullopt;
 
+/*
         std::cout << "\n";
         game.print_possible_moves(game.possible_moves());
         std::cout << "\n";
+        */
         PgnMove tmp2 = tools::create_pgnmove (File::E, Rank::SEVEN, File::F, \
                 Rank::EIGHT, PieceType::QUEEN,\
                 true, ReportType::NONE, nnull);

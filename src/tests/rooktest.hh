@@ -181,9 +181,11 @@ namespace test
 
         ASSERT_EQ(game.valid_move(tmp1), true);
         game.set_turn(Color::BLACK);
+        /*
         std::cout << "\n";
         game.print_possible_moves(game.possible_moves());
         std::cout << "\n";
+        */
         ASSERT_EQ(game.valid_move(tmp2), true);
     }
 
