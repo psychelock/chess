@@ -44,6 +44,9 @@ namespace board
 
             opt_piece_t operator[](const Position& position) const;
 
+            board_t get_board(void) { return board_; }
+            Color get_turn(void) { return turn_; }
+            void set_board(board_t board) { board_ = board; }
             void set_turn(Color color) { turn_ = color; }
             void set_castling(std::string castling) { castling_ = castling; }
             void set_en_passant(std::string enp) { en_passant_ = enp; }

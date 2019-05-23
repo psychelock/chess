@@ -198,13 +198,13 @@ namespace board
                 }
                 else
                 {
-                    int white = piece->second == Color::WHITE ? 1 : -1;
+                    int side = piece->second == Color::WHITE ? 1 : -1;
                     dest_int = pos;
                     for(int i : pawndir)
                     {
                         capture = false;
-                       if(i == 20)
-                       {
+                        if(i == 20)
+                        {
                             if(turn_ == Color::WHITE)
                             {
                                 if(!(pos >30 && pos < 40))
@@ -215,28 +215,27 @@ namespace board
                                 if(!(pos >80 && pos < 90))
                                     break;
                             }
-                       }
-                       dest_int = pos + i * white;  
-                       std::optional<Position> to = tools::get_position(dest_int);
-                       if(to == std::nullopt) // out of bounds
-                           continue;
-                       auto dest_piece = board_[dest_int]; // optional pair of piece type and color
-                       if(i%10 == 0 && dest_piece != std::nullopt)  // pawan cant move forward
+                        }
+                        dest_int = pos + i * side;  
+                        std::optional<Position> to = tools::get_position(dest_int);
+                        if(to == std::nullopt) // out of bounds
                             continue;
-                       else if(i%10 != 0)
-                       {
+                        auto dest_piece = board_[dest_int]; // optional pair of piece type and color
+                        if(i%10 == 0 && dest_piece != std::nullopt)  // pawn cant move forward
+                            continue;
+                        else if(i%10 != 0)
+                        {
                             if(dest_piece == std::nullopt || dest_piece->second == turn_)
                                 continue;
                             capture = true;
-                       }
-                       auto from  = tools::get_position(pos);
-                       PgnMove currentmove(from.value(), to.value(), pt, capture, \
-                               ReportType::NONE);
+                        }
+                        auto from  = tools::get_position(pos);
+                        PgnMove currentmove(from.value(), to.value(), pt, capture, \
+                                ReportType::NONE);
 
-                       moves.insert(moves.end(), currentmove);
-
+                        moves.insert(moves.end(), currentmove);
                     }
-                    
+
                 }
             }
         }
@@ -249,11 +248,6 @@ namespace board
         {
             std::cout << move;
         }
-    }
-
-    void ChessBoard::set_turn(Color color)
-    {
-        turn_ = color;
     }
 
     static bool is_check_pawn(int dir, Color king)
@@ -287,7 +281,7 @@ namespace board
                 int direc = offset[number][dir];            
                 // stop after first case for king
                 if(std::find(&offset[pnum][0], &offset[pnum][0]+8, direc) \
-                         != &offset[pnum][0]+8)                        // checks by everything else
+                        != &offset[pnum][0]+8)                        // checks by everything else
                 {
                     if(pnum == 0)       // 'checks' by king
                         return count == 1;

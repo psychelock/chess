@@ -6,7 +6,7 @@
 #include "board.hh"
 #include "given/listener.hh"
 #include "tools.hh"
-#include "perft-parser.hh"
+#include "parsing.hh"
 
 constexpr char init_setup[] = \
                             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
@@ -33,8 +33,13 @@ int main (int argc, char *argv[])
             std::cout << desc;
         }
         else if(vm.count("pgn"))
-        {
-            std::cout << "FIXME\n";
+        { 
+            auto tmp = create_chessboard_pgn(vm["pgn"].as<std::string>());
+            if(tmp != std::nullopt)
+            {
+                auto game=tmp.value();
+                game.dump_board();
+            }
         }
         else if(vm.count("listeners"))
         {
@@ -42,15 +47,19 @@ int main (int argc, char *argv[])
         }
         else if(vm.count("perft"))
         {
-            ChessBoard game = create_chessboard_perft(vm["perft"].as<std::string>());
-            game.dump_board();
+            auto tmp = create_chessboard_perft(vm["perft"].as<std::string>());
+            if(tmp != std::nullopt)
+            {
+                auto game=tmp.value();
+                game.dump_board();
+            }
         }
         else
         {
             board::ChessBoard game(init_setup);
             void *handle = dlopen("../src/given/tests/libbasic-output.so", RTLD_LAZY);
             void * create = dlsym(handle, "listener_create");
-                listener::Listener *lis = reinterpret_cast<listener::Listener*(*)()>(create)();
+            listener::Listener *lis = reinterpret_cast<listener::Listener*(*)()>(create)();
             lis->register_board(game);
             free(lis);
             game.dump_board();

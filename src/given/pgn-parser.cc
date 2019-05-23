@@ -10,12 +10,12 @@ namespace pgn_parser
 {
     board::File to_file(char symbol)
     {
-        return static_cast<board::File>(symbol - 'a');
+        return static_cast<board::File>(symbol - 'a' + 1);
     }
 
     board::Rank to_rank(char symbol)
     {
-        return static_cast<board::Rank>(symbol - '1');
+        return static_cast<board::Rank>(symbol - '1' + 1);
     }
 
     /*

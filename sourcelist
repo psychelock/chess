@@ -17,7 +17,7 @@ set(sources ${sources}
         src/given/utype.hh
         src/board.hh
         src/board.cc
-        src/perft-parser.cc
-        src/perft-parser.hh
+        src/parsing.cc
+        src/parsing.hh
         src/tools.cc
    )
