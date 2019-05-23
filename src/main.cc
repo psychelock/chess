@@ -1,10 +1,13 @@
 #include <iostream>
 #include <exception>
-#include "board.hh"
-#include "given/listener.hh"
 #include <boost/program_options.hpp>
 #include <dlfcn.h>
+#include <vector>
+#include "board.hh"
+#include "given/listener.hh"
 #include "tools.hh"
+#include "perft-parser.hh"
+
 constexpr char init_setup[] = \
                             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
@@ -16,8 +19,10 @@ int main (int argc, char *argv[])
     desc.add_options()
         ("help,h", "List of possible commands")
         ("pgn", po::value<std::string>(), "Pgn option")
-        ("listeners,l", po::value<std::string>() , "Path to listener plugins")
-        ("perft", po::value<std::string>(), "path to perft file");
+        ("listeners,l", po::value<std::string>()->required(),\
+                        "Path to listener plugins")
+        ("perft", po::value<std::string>()->required(),\
+                        "path to perft file");
     
     po::variables_map vm;
     try
@@ -37,7 +42,8 @@ int main (int argc, char *argv[])
         }
         else if(vm.count("perft"))
         {
-            std::cout << "FIXME\n";
+            ChessBoard game = create_chessboard_perft(vm["perft"].as<std::string>());
+            game.dump_board();
         }
         else
         {

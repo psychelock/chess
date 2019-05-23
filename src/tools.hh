@@ -1,6 +1,7 @@
 #pragma once
 #include "board.hh"
 #include "given/pgn-move.hh"
+#include <fstream>
 
 using namespace board;
 namespace tools

@@ -33,7 +33,6 @@ namespace board
 
             bool valid_move(const PgnMove&);
             std::list<PgnMove> possible_moves(void);
-            void set_turn(Color);
             void print_possible_moves(const std::list<PgnMove>& moves);
             bool is_check(board_t& , Color kingcolor);
             bool is_checkmove(PgnMove move, board_t board, Color turn);
@@ -45,6 +44,9 @@ namespace board
 
             opt_piece_t operator[](const Position& position) const;
 
+            void set_turn(Color color) { turn_ = color; }
+            void set_castling(std::string castling) { castling_ = castling; }
+            void set_en_passant(std::string enp) { en_passant_ = enp; }
             ~ChessBoard() = default;
     };
 }

@@ -208,11 +208,6 @@ namespace board
         }
     }
 
-    void ChessBoard::set_turn(Color color)
-    {
-        turn_ = color;
-    }
-
     static bool is_check_aux(int pos, const board_t& board, int dir, \
             const Color kingcolor, int number)
     {
