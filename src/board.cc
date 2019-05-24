@@ -23,7 +23,7 @@ namespace board
     {
         board_t copy = board;
         do_move(copy, move);
-        return is_check(copy, turn);
+        return is_check(copy, turn, 0); // 0 if the kings position is not known before
     }
 
     ChessBoard::ChessBoard(std::string setup)
@@ -52,7 +52,7 @@ namespace board
             return tmp;
         }
         else if (!islower(c))
-        {   
+        {
             type = pgn_parser::parse_piecetype(c);
             side_piece_t tmp = std::make_pair(type, Color::WHITE);
             return tmp;
@@ -183,7 +183,6 @@ namespace board
                                     capture = true;
                             }
                             //FIXME
-                            // handle check 
                             // handle promotion
                             // handle checkmate
                             // handle castling
@@ -278,14 +277,14 @@ namespace board
                     break;
                 auto pt = board.at(dest_int)->first;          //  enemy piece after here
                 int pnum = utils::utype(pt);
-                int direc = offset[number][dir];            
+                int direc = offset[number][dir];
                 // stop after first case for king
                 if(std::find(&offset[pnum][0], &offset[pnum][0]+8, direc) \
                         != &offset[pnum][0]+8)                        // checks by everything else
                 {
                     if(pnum == 0)       // 'checks' by king
                         return count == 1;
-                    if(pt == PieceType::PAWN)                       // checks by pawn           
+                    if(pt == PieceType::PAWN)                       // checks by pawn
                         return count == 1 && is_check_pawn(direc, kingcolor);
                     check = true;
                 }
@@ -296,27 +295,34 @@ namespace board
     }
 
 
-    bool ChessBoard::is_check(board_t& board, Color kingcolor)
+    bool ChessBoard::is_check(board_t& board, Color kingcolor, int position)
     {
+        int pos = 0;
         bool check = false;
-        for(auto const&[pos, piece] : board)
+        if(position == 0)
         {
-            if(piece != std::nullopt)
+            for(auto const&[index, piece] : board)
             {
-                if(piece->first == PieceType::KING && piece->second == kingcolor)
+                if(piece != std::nullopt)
                 {
-                    for(int dir = 0; dir < 8; dir++)
+                    if(piece->first == PieceType::KING && piece->second == kingcolor)
                     {
-                        if(check)
-                            return true;
-                        check = check ||  is_check_aux(pos, board, dir, kingcolor, 1); // for other pieces
-                        check = check ||  is_check_aux(pos, board, dir, kingcolor, 4); // for knight
+                        pos = index;
                     }
-                    return check;
                 }
             }
         }
-        return false;
+        else
+            pos = position;
+
+        for(int dir = 0; dir < 8; dir++)
+        {
+            if(check)
+                return true;
+            check = check ||  is_check_aux(pos, board, dir, kingcolor, 1); // for other pieces
+            check = check ||  is_check_aux(pos, board, dir, kingcolor, 4); // for knight
+        }
+        return check;
     }
 
     void ChessBoard::do_move(board_t& board, PgnMove move)

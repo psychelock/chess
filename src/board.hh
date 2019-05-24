@@ -34,7 +34,7 @@ namespace board
             bool valid_move(const PgnMove&);
             std::list<PgnMove> possible_moves(void);
             void print_possible_moves(const std::list<PgnMove>& moves);
-            bool is_check(board_t& , Color kingcolor);
+            bool is_check(board_t& , Color kingcolor, int position);
             bool is_checkmove(PgnMove move, board_t board, Color turn);
 
             int perft_score(int depth);
