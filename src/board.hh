@@ -36,7 +36,9 @@ namespace board
             void print_possible_moves(const std::list<PgnMove>& moves);
             bool is_check(board_t& , Color kingcolor, int position);
             bool is_checkmove(PgnMove move, board_t board, Color turn);
-
+            void add_castling_aux(int pos, int side, std::list<PgnMove> moves);
+            void add_castling(int pos, std::list<PgnMove> moves);
+            
             int perft_score(int depth);
             void do_move(board_t&, PgnMove);
             void undo_move(PgnMove);

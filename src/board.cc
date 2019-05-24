@@ -149,7 +149,41 @@ namespace board
         }
         return false;
     }
+    
+    void ChessBoard::add_castling_aux(int pos, int side, std::list<PgnMove> moves)
+    {
+        if(board_.at(pos+(1*side)) == std::nullopt &&\
+            board_.at(pos+(2*side)) == std::nullopt)
+        {
+            if(!(is_check(board_, turn_, pos+(1*side))) &&\
+                    !(is_check(board_, turn_, pos+(2*side))))
+            {
+                auto to = tools::get_position(pos+(2*side));
+                auto from = tools::get_position(pos);
+                PgnMove currentmove(from.value(), to.value(),\
+                        PieceType::KING, false, ReportType::NONE);
+                moves.insert(moves.end(), currentmove);
+            }
+        }
+    }
 
+    void ChessBoard::add_castling(int pos, std::list<PgnMove> moves) //Assuming castling_ is perfect via do_move
+    {
+        int side = 0;
+        char king = (turn_ == Color::WHITE) ? 'K' : 'k';
+        char queen = (turn_ == Color::WHITE) ? 'Q' : 'q';
+        
+        if(castling_.find(king) != std::string::npos)
+        {
+            side = 1;
+            add_castling_aux(pos, side, moves);
+        }
+        else if(castling_.find(queen) != std::string::npos)
+        {
+            side = -1;
+            add_castling_aux(pos, side, moves);
+        }
+    }
 
     std::list<PgnMove> ChessBoard::possible_moves(void)
     {
@@ -195,7 +229,9 @@ namespace board
                         }while(slide[piece_num] && (capture == false));
                     }
                 }
-                else
+                else if(pt == PieceType::KING) // for castling
+                    add_castling(pos, moves);
+                else if(pt == PieceType::PAWN)
                 {
                     int side = piece->second == Color::WHITE ? 1 : -1;
                     dest_int = pos;
@@ -273,7 +309,7 @@ namespace board
                 return false;
             else if(board.at(dest_int) != std::nullopt)
             {
-                if(board.at(dest_int)->second == kingcolor)     // same piece
+                if(board.at(dest_int)->second == kingcolor)     // same piece color
                     break;
                 auto pt = board.at(dest_int)->first;          //  enemy piece after here
                 int pnum = utils::utype(pt);
@@ -302,15 +338,9 @@ namespace board
         if(position == 0)
         {
             for(auto const&[index, piece] : board)
-            {
                 if(piece != std::nullopt)
-                {
                     if(piece->first == PieceType::KING && piece->second == kingcolor)
-                    {
                         pos = index;
-                    }
-                }
-            }
         }
         else
             pos = position;
