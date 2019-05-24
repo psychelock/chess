@@ -1,9 +1,10 @@
 #include "knighttest.hh"
 #include "bishoptest.hh"
 #include "rooktest.hh"
-#include "queentest.hh"
 #include "kingtest.hh"
 #include "pawntest.hh"
+#include "specialtest.hh"
+#include "queentest.hh"
 
 int main (int argc, char *argv[])
 {

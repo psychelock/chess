@@ -150,11 +150,13 @@ namespace board
         return false;
     }
     
-    void ChessBoard::add_castling_aux(int pos, int side, std::list<PgnMove> moves)
+    std::optional<PgnMove> ChessBoard::add_castling_aux(int pos, int side)
     {
         if(board_.at(pos+(1*side)) == std::nullopt &&\
             board_.at(pos+(2*side)) == std::nullopt)
         {
+            if(side == -1 && board_.at(pos-3) != std::nullopt)
+                return std::nullopt;
             if(!(is_check(board_, turn_, pos+(1*side))) &&\
                     !(is_check(board_, turn_, pos+(2*side))))
             {
@@ -162,12 +164,13 @@ namespace board
                 auto from = tools::get_position(pos);
                 PgnMove currentmove(from.value(), to.value(),\
                         PieceType::KING, false, ReportType::NONE);
-                moves.insert(moves.end(), currentmove);
+                return currentmove;
             }
         }
+        return std::nullopt;
     }
 
-    void ChessBoard::add_castling(int pos, std::list<PgnMove> moves) //Assuming castling_ is perfect via do_move
+    std::list<PgnMove> ChessBoard::add_castling(int pos, std::list<PgnMove> moves) //Assuming castling_ is perfect via do_move
     {
         int side = 0;
         char king = (turn_ == Color::WHITE) ? 'K' : 'k';
@@ -176,13 +179,18 @@ namespace board
         if(castling_.find(king) != std::string::npos)
         {
             side = 1;
-            add_castling_aux(pos, side, moves);
+            auto tmp = add_castling_aux(pos, side);
+            if(tmp != std::nullopt)
+                moves.insert(moves.end(), tmp.value());
         }
-        else if(castling_.find(queen) != std::string::npos)
+        if(castling_.find(queen) != std::string::npos)
         {
             side = -1;
-            add_castling_aux(pos, side, moves);
+            auto tmp = add_castling_aux(pos, side);
+            if(tmp != std::nullopt)
+                moves.insert(moves.end(), tmp.value());
         }
+        return moves;
     }
 
     std::list<PgnMove> ChessBoard::possible_moves(void)
@@ -229,8 +237,8 @@ namespace board
                         }while(slide[piece_num] && (capture == false));
                     }
                 }
-                else if(pt == PieceType::KING) // for castling
-                    add_castling(pos, moves);
+                else if(pt == PieceType::KING) // for castling remove castling later
+                    moves = add_castling(pos, moves);
                 else if(pt == PieceType::PAWN)
                 {
                     int side = piece->second == Color::WHITE ? 1 : -1;
