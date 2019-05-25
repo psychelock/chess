@@ -152,19 +152,22 @@ namespace board
     
     std::optional<PgnMove> ChessBoard::add_castling_aux(int pos, int side)
     {
-        if(board_.at(pos+(1*side)) == std::nullopt &&\
-            board_.at(pos+(2*side)) == std::nullopt)
+        if (pos == 25 || pos == 95)
         {
-            if(side == -1 && board_.at(pos-3) != std::nullopt)
-                return std::nullopt;
-            if(!(is_check(board_, turn_, pos+(1*side))) &&\
-                    !(is_check(board_, turn_, pos+(2*side))))
+            if(board_.at(pos+(1*side)) == std::nullopt &&\
+                board_.at(pos+(2*side)) == std::nullopt)
             {
-                auto to = tools::get_position(pos+(2*side));
-                auto from = tools::get_position(pos);
-                PgnMove currentmove(from.value(), to.value(),\
-                        PieceType::KING, false, ReportType::NONE);
-                return currentmove;
+                if(side == -1 && board_.at(pos-3) != std::nullopt)
+                    return std::nullopt;
+                if(!(is_check(board_, turn_, pos+(1*side))) &&\
+                        !(is_check(board_, turn_, pos+(2*side))))
+                {
+                    auto to = tools::get_position(pos+(2*side));
+                    auto from = tools::get_position(pos);
+                    PgnMove currentmove(from.value(), to.value(),\
+                            PieceType::KING, false, ReportType::NONE);
+                    return currentmove;
+                }
             }
         }
         return std::nullopt;
@@ -175,7 +178,7 @@ namespace board
         int side = 0;
         char king = (turn_ == Color::WHITE) ? 'K' : 'k';
         char queen = (turn_ == Color::WHITE) ? 'Q' : 'q';
-        
+
         if(castling_.find(king) != std::string::npos)
         {
             side = 1;
@@ -237,7 +240,7 @@ namespace board
                         }while(slide[piece_num] && (capture == false));
                     }
                 }
-                else if(pt == PieceType::KING) // for castling remove castling later
+                if(pt == PieceType::KING) // for castling remove castling later
                     moves = add_castling(pos, moves);
                 else if(pt == PieceType::PAWN)
                 {
