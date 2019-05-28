@@ -4,12 +4,12 @@ constexpr int direction[6] = {8, 8, 4, 4, 8, 0};
 
 constexpr int offset[6][8] = \
 {
-    { -11, -10, -9, -1, 1,  9, 10, 11 }, /* KING */
+        { -11, -10, -9, -1, 1,  9, 10, 11 }, /* KING */
         { -11, -10, -9, -1, 1,  9, 10, 11 }, /* QUEEN */
         { -10,  -1,  1, 10, 0,  0,  0,  0 }, /* ROOK */
         { -11,  -9,  9, 11, 0,  0,  0,  0 }, /* BISHOP */
         { -21, -19,-12, -8, 8, 12, 19, 21 }, /* KNIGHT */
-        {   -11,   -9,  9,  11, 0,  0,  0,  0 } // only the capture directions here!
+        { -11,  -9,  9,  11, 0, 0,  0,  0 } // only the capture directions here!
 };
 
 constexpr bool slide[6] = { false, true, true, true, false, false };
@@ -19,13 +19,6 @@ constexpr int pawndir[4] = { 9,10,11,20};
 
 namespace board
 {
-    bool ChessBoard::is_checkmove(PgnMove move, board_t board, Color turn)
-    {
-        board_t copy = board;
-        do_move(copy, move);
-        return is_check(copy, turn, 0); // 0 if the kings position is not known before
-    }
-
     ChessBoard::ChessBoard(std::string setup)
     {
         turn_ = Color::WHITE;
@@ -40,6 +33,12 @@ namespace board
             board_[i] = std::nullopt;
         }
         create_board(setup);
+        all_moves_ = possible_moves();
+    }
+
+    void ChessBoard::calculate_moves(void)
+    {
+        all_moves_ = possible_moves();
     }
 
     ChessBoard::opt_piece_t ChessBoard::create_piece(char c)
@@ -131,9 +130,11 @@ namespace board
 
     bool ChessBoard::valid_move(const PgnMove& move)
     {
-        auto moves = possible_moves();
-        auto it =  std::find(moves.begin(), moves.end(), move);
-        if(it != moves.end())
+        if(all_moves_.size() == 0)
+            all_moves_ = possible_moves();
+
+        auto it =  std::find(all_moves_.begin(), all_moves_.end(), move);
+        if(it != all_moves_.end())
         {
             if (is_checkmove(move, board_, turn_))
                 return false;
@@ -148,6 +149,13 @@ namespace board
             return move.get_report() == ReportType::NONE; // not a check
         }
         return false;
+    }
+    
+    bool ChessBoard::is_checkmove(PgnMove move, board_t board, Color turn)
+    {
+        board_t copy = board;
+        do_move(copy, move);
+        return is_check(copy, turn, 0); // 0 for unknown king pos
     }
     
     std::optional<PgnMove> ChessBoard::add_castling_aux(int pos, int side)
@@ -173,7 +181,7 @@ namespace board
         return std::nullopt;
     }
 
-    std::list<PgnMove> ChessBoard::add_castling(int pos, std::list<PgnMove> moves) //Assuming castling_ is perfect via do_move
+    std::list<PgnMove> ChessBoard::add_castling(int pos, std::list<PgnMove> moves)
     {
         int side = 0;
         char king = (turn_ == Color::WHITE) ? 'K' : 'k';
@@ -230,7 +238,6 @@ namespace board
                             //FIXME
                             // handle promotion
                             // handle checkmate
-                            // handle castling
                             // handle en passant
                             auto from  = tools::get_position(pos);
                             PgnMove currentmove(from.value(), to.value(), pt, capture, \
@@ -376,6 +383,19 @@ namespace board
         board[tools::get_index(to)] = res;
         //FIXME handle special cases later;
     }
+    
+    bool ChessBoard::is_stalemate(void)
+    {
+        return (all_moves_.size()==0);
+    }
 
-
+    bool ChessBoard::is_checkmate(void)
+    {
+        for(auto move: all_moves_)
+        {
+            if(valid_move(move))
+                return true;
+        }
+        return false;
+    }
 }

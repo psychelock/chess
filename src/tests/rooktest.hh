@@ -54,6 +54,7 @@ namespace test
         ASSERT_EQ(game.valid_move(tmp5), true);
 
         game.set_turn(Color::BLACK);
+        game.calculate_moves();
  /*       std::cout << "\n";
         game.print_possible_moves(game.possible_moves());
         std::cout << "\n";*/
@@ -85,6 +86,7 @@ namespace test
         ASSERT_EQ(game.valid_move(tmp2), true);
         ASSERT_EQ(game.valid_move(tmp3), true);
         game.set_turn(Color::BLACK);
+        game.calculate_moves();
         ASSERT_EQ(game.valid_move(tmp4), true);
 
     }
@@ -126,6 +128,7 @@ namespace test
         ASSERT_EQ(game.valid_move(tmp3), false);
         ASSERT_EQ(game.valid_move(tmp4), false);
         game.set_turn(Color::BLACK);
+        game.calculate_moves();
         ASSERT_EQ(game.valid_move(tmp5), false);
         ASSERT_EQ(game.valid_move(tmp6), false);
         ASSERT_EQ(game.valid_move(tmp7), false);
@@ -160,6 +163,7 @@ namespace test
         ASSERT_EQ(game.valid_move(tmp2), false);
         ASSERT_EQ(game.valid_move(tmp3), false);
         game.set_turn(Color::BLACK);
+        game.calculate_moves();
         ASSERT_EQ(game.valid_move(tmp4), false);
         ASSERT_EQ(game.valid_move(tmp5), false);
         ASSERT_EQ(game.valid_move(tmp6), false);
@@ -181,6 +185,7 @@ namespace test
 
         ASSERT_EQ(game.valid_move(tmp1), true);
         game.set_turn(Color::BLACK);
+        game.calculate_moves();
         /*
         std::cout << "\n";
         game.print_possible_moves(game.possible_moves());

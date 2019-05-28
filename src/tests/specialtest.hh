@@ -30,6 +30,7 @@ namespace test
 
         ASSERT_EQ(game.valid_move(tmp1), true);
         game.set_turn(Color::BLACK);
+        game.calculate_moves();
         ASSERT_EQ(game.valid_move(tmp2), true);
     }
     TEST(SpecialTest, CastlingInvalid) 
@@ -47,6 +48,7 @@ namespace test
 
         ASSERT_EQ(game.valid_move(tmp1), false);
         game.set_turn(Color::BLACK);
+        game.calculate_moves();
         ASSERT_EQ(game.valid_move(tmp2), false);
     }
 
