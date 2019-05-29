@@ -33,7 +33,8 @@ namespace board
             board_[i] = std::nullopt;
         }
         create_board(setup);
-        all_moves_ = possible_moves();
+        calculate_moves();
+        previous_state = NULL;
     }
 
     void ChessBoard::calculate_moves(void)
@@ -247,7 +248,7 @@ namespace board
                         }while(slide[piece_num] && (capture == false));
                     }
                 }
-                if(pt == PieceType::KING) // for castling remove castling later
+                if(pt == PieceType::KING)
                     moves = add_castling(pos, moves);
                 else if(pt == PieceType::PAWN)
                 {
@@ -375,6 +376,7 @@ namespace board
 
     void ChessBoard::do_move(board_t& board, PgnMove move)
     {
+        previous_state = this;
         auto from = move.get_start();
         auto to = move.get_end();
 
@@ -383,11 +385,20 @@ namespace board
         board[tools::get_index(to)] = res;
         //FIXME handle special cases later;
     }
-    
+
     bool ChessBoard::is_stalemate(void)
     {
-        return (all_moves_.size()==0);
+        return (all_moves_.size()==0); // FIXME add stalemate due
+                                       // to insufficenet pieces 
     }
+    
+    bool ChessBoard::is_checkmatemove(PgnMove move, board_t board, Color turn)
+    {
+        do_move(board, move);
+        turn = turn;
+        return is_checkmate();
+    }
+
 
     bool ChessBoard::is_checkmate(void)
     {

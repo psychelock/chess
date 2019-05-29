@@ -24,6 +24,7 @@ namespace board
             std::string castling_;
             std::string en_passant_;
             std::list<PgnMove> all_moves_;
+            ChessBoard *previous_state;
 
         public:
             ChessBoard(std::string setup);
@@ -36,6 +37,7 @@ namespace board
             std::list<PgnMove> possible_moves(void);
             void print_possible_moves(const std::list<PgnMove>& moves);
             bool is_check(board_t& , Color kingcolor, int position);
+            bool is_checkmatemove(PgnMove move, board_t board, Color turn);
             bool is_checkmove(PgnMove move, board_t board, Color turn);
             std::optional<PgnMove> add_castling_aux(int pos, int side);
             std::list<PgnMove> add_castling(int pos, std::list<PgnMove> moves);
@@ -44,7 +46,7 @@ namespace board
 
             int perft_score(int depth);
             void do_move(board_t&, PgnMove);
-            void undo_move(PgnMove);
+            void undo_move(void);
 
             opt_piece_t operator[](const Position& position) const;
 
