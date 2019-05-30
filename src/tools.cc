@@ -108,4 +108,5 @@ namespace tools
         int rank = utils::utype(p.rank_get());
         return (rank + 1) * 10 + file;
     }
+
 }

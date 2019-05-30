@@ -24,6 +24,8 @@ namespace board
             std::string castling_;
             std::string en_passant_;
             std::list<PgnMove> all_moves_;
+            std::list<PgnMove> history_;
+            std::optional<std::pair<PieceType,Color>> captured_piece;
 
         public:
             ChessBoard(std::string setup);
@@ -43,12 +45,12 @@ namespace board
             bool is_stalemate(void);
 
             int perft_score(int depth);
-            void do_move(board_t&, PgnMove);
-            void undo_move(PgnMove);
+            void do_move(board_t&, const PgnMove&);
+            void undo_move();
 
             opt_piece_t operator[](const Position& position) const;
 
-            board_t get_board(void) { return board_; }
+            board_t& get_board(void) { return board_; }
             Color get_turn(void) { return turn_; }
             void set_board(board_t board) { board_ = board; }
             void set_turn(Color color) { turn_ = color; }

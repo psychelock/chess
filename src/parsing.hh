@@ -8,5 +8,5 @@
 #include <optional>
 #include <vector>
 
-std::optional<ChessBoard> create_chessboard_perft(std::string file);
+std::optional<ChessBoard> create_chessboard_perft(std::string file, int& depth);
 std::optional<ChessBoard> create_chessboard_pgn(std::string file);

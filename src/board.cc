@@ -275,7 +275,9 @@ namespace board
                             continue;
                         auto dest_piece = board_[dest_int]; // optional pair of piece type and color
                         if(i%10 == 0 && dest_piece != std::nullopt)  // pawn cant move forward
-                            continue;
+                                continue;
+                        else if(i == 20 && board_[dest_int - (10 * side)] != std::nullopt)   // pawn cant jump hey (double forward)
+                                continue;
                         else if(i%10 != 0)
                         {
                             if(dest_piece == std::nullopt || dest_piece->second == turn_)
@@ -373,15 +375,45 @@ namespace board
         return check;
     }
 
-    void ChessBoard::do_move(board_t& board, PgnMove move)
+    void ChessBoard::do_move(board_t& board,const PgnMove& move)
     {
-        auto from = move.get_start();
-        auto to = move.get_end();
+        auto from_index = tools::get_index(move.get_start());
+        auto to_index = tools::get_index(move.get_end());
 
-        auto res = board[tools::get_index(from)];
-        board[tools::get_index(from)] = std::nullopt;
-        board[tools::get_index(to)] = res;
+
+        if(move.get_capture())
+            captured_piece = board[to_index];
+          
+        auto res = board[from_index];
+        board[from_index] = std::nullopt;
+        board[to_index] = res;
         //FIXME handle special cases later;
+
+        history_.insert(history_.end(), move);
+
+    }
+
+    void ChessBoard::undo_move()
+    {
+        if(history_.size() == 0)
+            std::cout << "previous move not set";
+        else
+        {
+            auto prev_move = history_.back();       
+            PgnMove reverse_move(prev_move.get_end(), prev_move.get_start(), prev_move.get_piece(), prev_move.get_capture(), \
+                    ReportType::NONE);   // dont really care about other parameters of move
+
+            do_move(board_, reverse_move);     // careful with castling
+            if(prev_move.get_capture())
+            {
+                auto end_index = tools::get_index(prev_move.get_end());
+                board_[end_index] = captured_piece;
+                captured_piece = std::nullopt;
+            }
+            history_.pop_back();        // removing the move and its reverse
+            history_.pop_back();
+        }
+       
     }
     
     bool ChessBoard::is_stalemate(void)

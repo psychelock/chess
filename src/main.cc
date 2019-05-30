@@ -7,6 +7,7 @@
 #include "given/listener.hh"
 #include "tools.hh"
 #include "parsing.hh"
+#include "perft.hh"
 
 constexpr char init_setup[] = \
                             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
@@ -47,11 +48,16 @@ int main (int argc, char *argv[])
         }
         else if(vm.count("perft"))
         {
-            auto tmp = create_chessboard_perft(vm["perft"].as<std::string>());
+            int depth = 0;
+            int perft_score = 0;
+            auto tmp = create_chessboard_perft(vm["perft"].as<std::string>(), depth);
             if(tmp != std::nullopt)
             {
                 auto game=tmp.value();
                 game.dump_board();
+                auto moves = game.possible_moves();        // list of pgnmove
+                perft_score = perft(game, moves, depth);
+                std::cout << "\nDepth: " << depth << " Perft Score: " << perft_score << " all moves length: " << moves.size() << "\n";
             }
         }
         else

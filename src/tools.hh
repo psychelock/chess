@@ -2,6 +2,7 @@
 #include "board.hh"
 #include "given/pgn-move.hh"
 #include <fstream>
+#include <list>
 
 using namespace board;
 namespace tools
