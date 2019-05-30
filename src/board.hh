@@ -5,6 +5,7 @@
 #include "given/color.hh"
 #include "tools.hh"
 
+
 #include <map>
 #include <list>
 #include <string>
@@ -38,6 +39,7 @@ namespace board
             std::list<PgnMove> possible_moves(void);
             void print_possible_moves(const std::list<PgnMove>& moves);
             bool is_check(board_t& , Color kingcolor, int position);
+            bool is_checkmatemove(PgnMove move, board_t board, Color turn);
             bool is_checkmove(PgnMove move, board_t board, Color turn);
             std::optional<PgnMove> add_castling_aux(int pos, int side);
             std::list<PgnMove> add_castling(int pos, std::list<PgnMove> moves);
