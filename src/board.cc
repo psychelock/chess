@@ -34,6 +34,7 @@ namespace board
         }
         create_board(setup);
         calculate_moves();
+        pvs_ = Previous();
     }
 
     void ChessBoard::calculate_moves(void)
@@ -136,39 +137,46 @@ namespace board
         auto it =  std::find(all_moves_.begin(), all_moves_.end(), move);
         if(it != all_moves_.end())
         {
-            if (is_checkmove(move, board_, turn_))
-                return false;
-
+            do_move(*it);
             Color oppcol = (turn_ == Color::WHITE) ? Color::BLACK : Color::WHITE;
+            if (is_check(oppcol, 0))
+            {
+               // undo_move();
+                return false;
+            }
+            oppcol = (oppcol == Color::WHITE) ? Color::BLACK : Color::WHITE;
 
-            if(is_checkmove(move, board_, oppcol))
+            if(is_check(oppcol, 0))
             {
                 (*it).report_set(ReportType::CHECK);
+                undo_move(); //ADD WHILE TESTING
                 return move.get_report() == ReportType::CHECK;
             }
+            undo_move(); //ADD WHILE TESTING
             return move.get_report() == ReportType::NONE; // not a check
         }
         return false;
     }
-    
-    bool ChessBoard::is_checkmove(PgnMove move, board_t board, Color turn)
+
+    void ChessBoard::undo_move(void)
     {
-        board_t copy = board;
-        do_move(copy, move);
-        return is_check(copy, turn, 0); // 0 for unknown king pos
+        this->board_ = pvs_.b_;
+        this->turn_ = pvs_.t_;
+        this->castling_ = pvs_.cast_;
+        this->en_passant_ = pvs_.en_p_;
     }
-    
+
     std::optional<PgnMove> ChessBoard::add_castling_aux(int pos, int side)
     {
         if (pos == 25 || pos == 95)
         {
             if(board_.at(pos+(1*side)) == std::nullopt &&\
-                board_.at(pos+(2*side)) == std::nullopt)
+                    board_.at(pos+(2*side)) == std::nullopt)
             {
                 if(side == -1 && board_.at(pos-3) != std::nullopt)
                     return std::nullopt;
-                if(!(is_check(board_, turn_, pos+(1*side))) &&\
-                        !(is_check(board_, turn_, pos+(2*side))))
+                if(!(is_check(turn_, pos+(1*side))) &&\
+                        !(is_check(turn_, pos+(2*side))))
                 {
                     auto to = tools::get_position(pos+(2*side));
                     auto from = tools::get_position(pos);
@@ -235,10 +243,6 @@ namespace board
                                 else
                                     capture = true;
                             }
-                            //FIXME
-                            // handle promotion
-                            // handle checkmate
-                            // handle en passant
                             auto from  = tools::get_position(pos);
                             PgnMove currentmove(from.value(), to.value(), pt, capture, \
                                     ReportType::NONE);
@@ -314,8 +318,7 @@ namespace board
         return false;
     }
 
-    static bool is_check_aux(int pos, const board_t& board, int dir, \
-            const Color kingcolor, int number)
+    bool ChessBoard::is_check_aux(int pos, int dir, const Color kingcolor, int number)
     {
         bool check = false;
         int dest_int = pos ;
@@ -327,11 +330,11 @@ namespace board
             auto to = tools::get_position(dest_int);
             if(to == std::nullopt)
                 return false;
-            else if(board.at(dest_int) != std::nullopt)
+            else if(board_.at(dest_int) != std::nullopt)
             {
-                if(board.at(dest_int)->second == kingcolor)     // same piece color
+                if(board_.at(dest_int)->second == kingcolor)     // same piece color
                     break;
-                auto pt = board.at(dest_int)->first;          //  enemy piece after here
+                auto pt = board_.at(dest_int)->first;          //  enemy piece after here
                 int pnum = utils::utype(pt);
                 int direc = offset[number][dir];
                 // stop after first case for king
@@ -351,13 +354,13 @@ namespace board
     }
 
 
-    bool ChessBoard::is_check(board_t& board, Color kingcolor, int position)
+    bool ChessBoard::is_check(Color kingcolor, int position)
     {
         int pos = 0;
         bool check = false;
         if(position == 0)
         {
-            for(auto const&[index, piece] : board)
+            for(auto const&[index, piece] : board_)
                 if(piece != std::nullopt)
                     if(piece->first == PieceType::KING && piece->second == kingcolor)
                         pos = index;
@@ -369,75 +372,80 @@ namespace board
         {
             if(check)
                 return true;
-            check = check ||  is_check_aux(pos, board, dir, kingcolor, 1); // for other pieces
-            check = check ||  is_check_aux(pos, board, dir, kingcolor, 4); // for knight
+            check = check ||  is_check_aux(pos, dir, kingcolor, 1); // for other pieces
+            check = check ||  is_check_aux(pos, dir, kingcolor, 4); // for knight
         }
         return check;
     }
 
-    void ChessBoard::do_move(board_t& board,const PgnMove& move)
+    void ChessBoard::do_move(PgnMove move)
     {
-        auto from_index = tools::get_index(move.get_start());
-        auto to_index = tools::get_index(move.get_end());
+        pvs_ = Previous(board_, turn_, castling_, en_passant_);
+        auto from = tools::get_index(move.get_start());
+        auto to = tools::get_index(move.get_end());
 
-
-        if(move.get_capture())
-            captured_piece = board[to_index];
-          
-        auto res = board[from_index];
-        board[from_index] = std::nullopt;
-        board[to_index] = res;
-        //FIXME handle special cases later;
-
-        history_.insert(history_.end(), move);
-
-    }
-
-    void ChessBoard::undo_move()
-    {
-        if(history_.size() == 0)
-            std::cout << "previous move not set";
-        else
+        if(move.get_piece() == PieceType::KING) //castling
         {
-            auto prev_move = history_.back();       
-            PgnMove reverse_move(prev_move.get_end(), prev_move.get_start(), prev_move.get_piece(), prev_move.get_capture(), \
-                    ReportType::NONE);   // dont really care about other parameters of move
-
-            do_move(board_, reverse_move);     // careful with castling
-            if(prev_move.get_capture())
+            if(from == 25 || from == 95)
             {
-                auto end_index = tools::get_index(prev_move.get_end());
-                board_[end_index] = captured_piece;
-                captured_piece = std::nullopt;
+                if(to == 27 || to == 97)
+                {
+                    int rookfrompos = (to == 27) ? 28 : 98;
+                    int rooktopos = (to == 27) ? 26 : 96;
+                    auto rook = board_[rookfrompos];
+                    board_[rookfrompos] = std::nullopt;
+                    board_[rooktopos] = rook;
+                }
+                else if(to == 23 || to == 93)
+                { 
+                    int rookfrompos = (to == 23) ? 21 : 91;
+                    int rooktopos = (to == 23) ? 24 : 94;
+                    auto rook = board_[rookfrompos];
+                    board_[rookfrompos] = std::nullopt;
+                    board_[rooktopos] = rook;
+                }
             }
-            history_.pop_back();        // removing the move and its reverse
-            history_.pop_back();
         }
-       
+        else if(move.get_piece() == PieceType::PAWN) //en_paasant or promotion
+        {
+            if(tools::string_from_pos(move.get_end()).compare(en_passant_)==0)
+            {
+                int tmp = to % 10;
+                if(to >= 41 && to <= 48)
+                    board_[50+tmp] = std::nullopt;
+                else if (to >= 71 && to <= 78)
+                    board_[60+tmp] = std::nullopt;
+            }
+            else if(to >= 91 && to <= 98)
+            {
+                board_[from] = std::nullopt;
+                auto piece = move.get_promotion().value();
+                auto res = std::optional(std::make_pair(piece, turn_));
+                board_[to] = res;
+            }
+        }
+        auto res = board_[from];
+        board_[from] = std::nullopt;
+        board_[to] = res;
+        turn_ = (turn_ == Color::WHITE) ? Color::BLACK : Color::WHITE;
     }
 
     bool ChessBoard::is_stalemate(void)
     {
-        return (all_moves_.size()==0); // FIXME add stalemate due
-                                       // to insufficenet pieces 
-    }
-    
-    bool ChessBoard::is_checkmatemove(PgnMove move, board_t board, Color turn)
-    {
-        do_move(board, move);
-        Color tmp = turn;
-        turn = tmp;
-        return is_checkmate();
+        return (all_moves_.size()==0);
     }
 
-
-    bool ChessBoard::is_checkmate(void)
+    bool ChessBoard::is_checkmate(Color side)
     {
         for(auto move: all_moves_)
         {
-            if(valid_move(move))
-                return true;
+            do_move(move);
+            if(!is_check(side, 0))
+            {
+                return false;
+            }
+            undo_move();
         }
-        return false;
+        return true;
     }
 }

@@ -23,6 +23,7 @@ std::optional<ChessBoard> create_chessboard_perft(std::string file, int& depth)
     }
     return std::nullopt;
 }
+/*
 std::optional<ChessBoard> create_chessboard_pgn(std::string file)
 {
     std::vector moves = pgn_parser::parse_pgn(file);
@@ -43,4 +44,4 @@ std::optional<ChessBoard> create_chessboard_pgn(std::string file)
         game.set_turn(side);
     }
     return game;
-}
+}*/

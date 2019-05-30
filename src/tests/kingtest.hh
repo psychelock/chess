@@ -53,7 +53,6 @@ namespace test
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-
         ASSERT_EQ(game.valid_move(tmp7), true);
         ASSERT_EQ(game.valid_move(tmp8), true);
         ASSERT_EQ(game.valid_move(tmp9), true);

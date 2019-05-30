@@ -11,10 +11,8 @@ namespace gameloop
         int i = 0;
         do
         {
-            auto copy = board.get_board();
-            auto move = list.at(i);
-            i++;
-            board.do_move(copy, move);
+            auto move = list.at(i); i++;
+            board.do_move(move);
             if(!board.valid_move(move)) 
                 break;
             if(move.get_piece() == PieceType::KING) // castling
@@ -43,12 +41,12 @@ namespace gameloop
                 if(move.get_piece() == PieceType::PAWN && (end <=  98 || end >= 91)) //promotion
                     lis->on_piece_promoted(move.get_piece(), move.get_end());
             }
-            if(board.is_checkmate())
+            if(board.is_checkmate(board.get_turn()))
             {
                 lis->on_player_mat(board.get_turn());
                 break;
             }
-            else if(board.is_check(copy, board.get_turn(), 0))
+            else if(board.is_check(board.get_turn(), 0))
             {
                 lis->on_player_check(board.get_turn());
             }

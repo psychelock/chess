@@ -15,6 +15,8 @@ set(sources ${sources}
         src/given/uci.cc
         src/given/uci.hh
         src/given/utype.hh
+        src/helper.hh
+        src/helper.cc
         src/board.hh
         src/board.cc
         src/parsing.cc

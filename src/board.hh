@@ -4,15 +4,16 @@
 #include "given/pgn-parser.hh"
 #include "given/color.hh"
 #include "tools.hh"
+#include "helper.hh"
 
 
 #include <map>
 #include <list>
 #include <string>
+#include <optional>
 #include <memory>
 #include <algorithm>
 #include <iostream>
-
 
 namespace board
 {
@@ -25,8 +26,7 @@ namespace board
             std::string castling_;
             std::string en_passant_;
             std::list<PgnMove> all_moves_;
-            std::list<PgnMove> history_;
-            std::optional<std::pair<PieceType,Color>> captured_piece;
+            Previous pvs_;
 
         public:
             ChessBoard(std::string setup);
@@ -38,17 +38,16 @@ namespace board
             void create_board(std::string);
             std::list<PgnMove> possible_moves(void);
             void print_possible_moves(const std::list<PgnMove>& moves);
-            bool is_check(board_t& , Color kingcolor, int position);
-            bool is_checkmatemove(PgnMove move, board_t board, Color turn);
-            bool is_checkmove(PgnMove move, board_t board, Color turn);
+            bool is_check_aux(int pos, int dir, const Color kingcolor, int number);
+            bool is_check(Color kingcolor, int position);
             std::optional<PgnMove> add_castling_aux(int pos, int side);
             std::list<PgnMove> add_castling(int pos, std::list<PgnMove> moves);
-            bool is_checkmate(void);
+            bool is_checkmate(Color opp);
             bool is_stalemate(void);
 
             int perft_score(int depth);
-            void do_move(board_t&, const PgnMove&);
-            void undo_move();
+            void do_move(PgnMove);
+            void undo_move(void);
 
             opt_piece_t operator[](const Position& position) const;
 

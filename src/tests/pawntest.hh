@@ -43,12 +43,6 @@ namespace test
         PgnMove tmp6 = tools::create_pgnmove (File::B, Rank::SEVEN, File::B, \
                 Rank::SIX, PieceType::PAWN,\
                 false, ReportType::NONE, nnull);
-                /*
-           std::cout << "\n";
-           game.print_possible_moves(game.possible_moves());
-           std::cout << "\n";
-           */
-
         ASSERT_EQ(game.valid_move(tmp1), true);
         ASSERT_EQ(game.valid_move(tmp2), true);
         ASSERT_EQ(game.valid_move(tmp3), true);
@@ -167,6 +161,10 @@ namespace test
         PgnMove tmp2 = tools::create_pgnmove (File::G, Rank::THREE, File::H, \
                 Rank::TWO, PieceType::PAWN,\
                 true, ReportType::CHECK, nnull);
+           std::cout << "\n";
+           game.print_possible_moves(game.possible_moves());
+           std::cout << "\n";
+
 
         ASSERT_EQ(game.valid_move(tmp1), true);
 

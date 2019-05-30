@@ -109,4 +109,12 @@ namespace tools
         return (rank + 1) * 10 + file;
     }
 
+    std::string string_from_pos(Position p)
+    {
+        char file = tolower(get_file(p.file_get()));
+        std::string rank = std::to_string(utils::utype(p.rank_get()));
+        std::string res = "";
+        res + file + rank;
+        return res;
+    }
 }
