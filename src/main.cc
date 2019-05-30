@@ -1,12 +1,12 @@
 #include <iostream>
 #include <exception>
 #include <boost/program_options.hpp>
-#include <dlfcn.h>
 #include <vector>
 #include "board.hh"
 #include "given/listener.hh"
 #include "tools.hh"
 #include "parsing.hh"
+#include "game.hh"
 
 constexpr char init_setup[] = \
                             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
@@ -34,12 +34,9 @@ int main (int argc, char *argv[])
         }
         else if(vm.count("pgn"))
         { 
-            auto tmp = create_chessboard_pgn(vm["pgn"].as<std::string>());
-            if(tmp != std::nullopt)
-            {
-                auto game=tmp.value();
-                game.dump_board();
-            }
+            auto list = pgn_parser::parse_pgn(vm["pgn"].as<std::string>());
+            board::ChessBoard game(init_setup);
+            gameloop::gameloop(game, list);
         }
         else if(vm.count("listeners"))
         {
@@ -57,16 +54,6 @@ int main (int argc, char *argv[])
         else
         {
             board::ChessBoard game(init_setup);
-            void *handle = dlopen("../src/given/tests/libbasic-output.so", RTLD_LAZY);
-            void * create = dlsym(handle, "listener_create");
-            listener::Listener *lis = reinterpret_cast<listener::Listener*(*)()>(create)();
-            lis->register_board(game);
-            free(lis);
-            game.dump_board();
-            game.possible_moves();
-            tools::dump_board_from_fen(init_setup);
-            dlclose(handle);
-
         }
     }
     catch(std::exception& e)

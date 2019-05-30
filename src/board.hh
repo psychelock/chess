@@ -5,6 +5,7 @@
 #include "given/color.hh"
 #include "tools.hh"
 
+
 #include <map>
 #include <list>
 #include <string>
