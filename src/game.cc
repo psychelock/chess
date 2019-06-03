@@ -13,7 +13,17 @@ namespace gameloop
         {
             if(i >= list.size())
                 break;
-            auto move = list.at(i); i++;
+            /*{
+                auto gen = ai::ai(1, board, (board.get_turn() == Color::BLACK)); // 1st param is depth
+                if(gen == std::nullopt)
+                    break;
+                else
+                    auto move = gen.value();
+            }
+            else
+            {*/
+                auto move = list.at(i); i++;
+            //}
             if(!board.valid_move(move)) 
                 break;
             if(move.get_piece() == PieceType::KING) // castling

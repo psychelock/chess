@@ -23,25 +23,3 @@ std::optional<ChessBoard> create_chessboard_perft(std::string file, int& depth)
     }
     return std::nullopt;
 }
-/*
-std::optional<ChessBoard> create_chessboard_pgn(std::string file)
-{
-    std::vector moves = pgn_parser::parse_pgn(file);
-    ChessBoard game(init_setup);
-    board::board_t check = game.get_board();
-    Color side;
-    for(auto i : moves)
-    {
-        game.do_move(check, i);
-        side = (game.get_turn() == Color::WHITE) ? Color::BLACK : Color::WHITE;
-        if (!game.valid_move(i))
-        {
-            //FIXME add how to handl logging before exiting
-            // Got an invalid move
-            exit(0);
-        }
-        game.set_board(check);
-        game.set_turn(side);
-    }
-    return game;
-}*/

@@ -116,20 +116,4 @@ namespace tools
         res + file + rank;
         return res;
     }
-
-    int get_value_x(Position p)
-    {
-        int check = get_index(p);
-        //2->7
-        //3->6
-        //4->5
-        return 9 - (check / 10);
-    }
-
-    int get_value_y(Position p)\
-    {
-        int check = get_index(p);
-        //21 -> 7,0    22 -> 7,1    31 -> 6,0
-        return (check % 10) - 1;
-    }
 }

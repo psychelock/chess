@@ -97,7 +97,7 @@ constexpr double QueenEval[8][8] =
     {-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0}
 };
 
-constexpr double kingEvalWhite[8][8] =
+constexpr double KingEvalWhite[8][8] =
 {
     {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
     {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
@@ -109,7 +109,7 @@ constexpr double kingEvalWhite[8][8] =
     { 2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0}
 };
 
-constexpr double kingEvalBlack[8][8] =
+constexpr double KingEvalBlack[8][8] =
 {
     { 2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0},
     { 2.0,  2.0,  0.0,  0.0,  0.0,  0.0,  2.0,  2.0},
@@ -123,11 +123,12 @@ constexpr double kingEvalBlack[8][8] =
 
 namespace ai
 {
-    board::PgnMove minimaxroot (int depth, board::ChessBoard game, bool black)
+    std::optional<board::PgnMove> ai (int depth, board::ChessBoard game, bool black)
     {
         std::list<PgnMove> raw_data = game.possible_moves();
         int bestmove = -9999;
-        auto index = raw_data.begin();
+        int i = 0;
+        int index = 0;
         for(auto it = raw_data.begin(); it != raw_data.end(); it++)
         {
             game.do_move(*it);
@@ -136,10 +137,18 @@ namespace ai
             if(val >= bestmove)
             {
                 bestmove = val;
-                index = it;
+                index = i;
             }
+            i++;
         }
-        return raw_data[index];
+        int count = 0;
+        for(auto move : raw_data)
+        {
+            if(count == index)
+                return move;
+            count++;
+        }
+        return std::nullopt;
     }
 
     int minimax(int depth, board::ChessBoard game, int alpha, int beta, bool black)
@@ -186,7 +195,9 @@ namespace ai
             if(square != std::nullopt)
             {
                 auto pt = square.value();
-                total += getPieceValue(pt, i , j); //FIXME handle position to i j
+                int i = 9 - (pos/10);
+                int j = (pos % 10 ) - 1;
+                total += getPieceValue(pt, i , j);
             }
         }
         return total;
@@ -195,27 +206,27 @@ namespace ai
     int getPieceValue(std::pair<board::PieceType, board::Color> pt, int x, int y)
     {
         int val = 0;
-        switch(pt->first)
+        switch(pt.first)
         {
             case (PieceType::PAWN):
-                val =  10 + ((pt->second == Color::WHITE) ? PawnEvalWhite[y][x] : PawnEvalBlack[y][x]);
+                val =  10 + ((pt.second == Color::WHITE) ? PawnEvalWhite[y][x] : PawnEvalBlack[y][x]);
                 break;
             case (PieceType::ROOK):
-                    val =  50 + ((pt->second == Color::WHITE) ? RookEvalWhite[y][x] : RookEvalBlack[y][x] );
+                    val =  50 + ((pt.second == Color::WHITE) ? RookEvalWhite[y][x] : RookEvalBlack[y][x] );
                     break;
             case (PieceType::KNIGHT):
                     val =  30 + KnightEval[y][x];
                     break;
             case (PieceType::BISHOP):
-                    val =  30 + ((pt->second == Color::WHITE) ? BishopEvalWhite[y][x] : BishopEvalBlack[y][x] );
+                    val =  30 + ((pt.second == Color::WHITE) ? BishopEvalWhite[y][x] : BishopEvalBlack[y][x] );
                     break;
             case (PieceType::QUEEN):
                     val =  90 + QueenEval[y][x];
                     break;
             default:
-                    val =  900 + ((pt->second == Color::WHITE) ? KingEvalWhite[y][x] : KingEvalBlack[y][x] );
+                    val =  900 + ((pt.second == Color::WHITE) ? KingEvalWhite[y][x] : KingEvalBlack[y][x] );
                     break;
         }
-        return (pt->second == Color::WHITE) ? val : -val;
-    };
+        return (pt.second == Color::WHITE) ? val : -val;
+    }
 }

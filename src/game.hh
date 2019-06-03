@@ -8,6 +8,7 @@
 #include "tools.hh"
 #include <dlfcn.h>
 #include <cassert>
+#include "ai.hh"
 
 namespace gameloop
 {

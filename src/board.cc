@@ -129,7 +129,7 @@ namespace board
         return res;
     }
 
-    bool ChessBoard::valid_move(const PgnMove& move, bool test)
+    bool ChessBoard::valid_move(const PgnMove& move, bool test) // FIXME add checkmate
     {
         if(all_moves_.size() == 0)
             all_moves_ = possible_moves();
@@ -149,12 +149,20 @@ namespace board
             if(is_check(oppcol, 0))
             {
                 (*it).report_set(ReportType::CHECK);
-                if(test)
-                    undo_move(); //ADD WHILE TESTING
+                if(test) //undo only while testing
+                    undo_move();
                 return move.get_report() == ReportType::CHECK;
             }
-            if(test)
-                undo_move(); //ADD WHILE TESTING
+            oppcol = (oppcol == Color::WHITE) ? Color::BLACK : Color::WHITE;
+            if(is_checkmate(oppcol))
+            {
+                (*it).report_set(ReportType::CHECKMATE);
+                if(test) //undo only while testing
+                    undo_move();
+                return move.get_report() == ReportType::CHECKMATE;
+            }
+            if(test) // undo only while testing
+                undo_move();
             return move.get_report() == ReportType::NONE; // not a check
         }
         return false;
