@@ -1,14 +1,7 @@
-Implementation
+board is not updating properly in previous ! check knight capture tmp2
+test checkmate
+incorporate ai inside gameloop
+handle listener option
+fill pawn movements from school computer
 
-Basic Moves
-    Pawn, King
-
-Special moves
-    Checkmate, En-passant, Promotion
-
-Listener
-
-Do_move
-
-Tests
-    Checkmate, Pawns
+TEST !!! TEST !!! TEST !!!
