@@ -99,7 +99,6 @@ namespace tools
 
         File f = static_cast<File> (p % 10);
         Rank r = static_cast<Rank> ((p/10) - 1);
-        
         return Position(f,r);
     }
     int get_index(Position p)

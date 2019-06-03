@@ -3,7 +3,9 @@
 #include "given/pgn-move.hh"
 #include <fstream>
 #include <list>
-
+#include <iostream>
+#include <algorithm>
+#include <array>
 using namespace board;
 namespace tools
 {

@@ -25,4 +25,6 @@ set(sources ${sources}
         src/perft.cc
         src/game.hh
         src/game.cc
+        src/ai.cc
+        src/ai.hh
    )

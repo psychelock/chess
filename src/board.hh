@@ -30,7 +30,6 @@ namespace board
 
         public:
             ChessBoard(std::string setup);
-            
             opt_piece_t create_piece(char c);
             std::string dump_board();
 
