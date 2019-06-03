@@ -1,3 +1,5 @@
+#include "ai.hh"
+
 constexpr double PawnEvalWhite[8][8]=
 {
     { 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
@@ -121,31 +123,30 @@ constexpr double kingEvalBlack[8][8] =
 
 namespace ai
 {
-    PgnMove minimaxroot (int depth, ChessBoard game, bool black)
+    board::PgnMove minimaxroot (int depth, board::ChessBoard game, bool black)
     {
         std::list<PgnMove> raw_data = game.possible_moves();
         int bestmove = -9999;
-        int i = 0;
-        int index = 0;
-        for(auto move : raw_data)
+        auto index = raw_data.begin();
+        for(auto it = raw_data.begin(); it != raw_data.end(); it++)
         {
-            game.do_move(move);
+            game.do_move(*it);
             int val = minimax(depth -1 , game, -10000, 10000, !black);
             game.undo_move();
             if(val >= bestmove)
             {
-                bestmove = value;
-                index = i;
+                bestmove = val;
+                index = it;
             }
         }
-        return raw_data.at(index);
+        return raw_data[index];
     }
 
-    int minimax(int depth, ChessBoard game, int alpha, int beta, bool black)
+    int minimax(int depth, board::ChessBoard game, int alpha, int beta, bool black)
     {
-        int pos++; //FIXME idk what is this
+        //int pos++; //FIXME idk what is this
         if(depth == 0)
-            return evalboard(game);
+            return evalBoard(game);
         auto raw = game.possible_moves();
         if(black) // Maximizing for black pieces
         {
@@ -177,10 +178,10 @@ namespace ai
         }
     }
 
-    int evalBoard(ChessBoard game)
+    int evalBoard(board::ChessBoard game)
     {
         int total = 0;
-        for(auto const& [pos, square] : game)
+        for(auto const& [pos, square] : game.get_board())
         {
             if(square != std::nullopt)
             {
@@ -191,9 +192,9 @@ namespace ai
         return total;
     }
 
-    int getPieceValue(std::pait<PieceType, Color> pt, int x, int y)
+    int getPieceValue(std::pair<board::PieceType, board::Color> pt, int x, int y)
     {
-        int value = 0;
+        int val = 0;
         switch(pt->first)
         {
             case (PieceType::PAWN):
