@@ -28,10 +28,10 @@ namespace test
                 Rank::EIGHT, PieceType::KING,\
                 false, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp1), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-        ASSERT_EQ(game.valid_move(tmp2), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
     }
     TEST(SpecialTest, CastlingInvalid) 
     {
@@ -46,10 +46,10 @@ namespace test
                 Rank::EIGHT, PieceType::KING,\
                 false, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp1), false);
+        ASSERT_EQ(game.valid_move(tmp1, true), false);
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-        ASSERT_EQ(game.valid_move(tmp2), false);
+        ASSERT_EQ(game.valid_move(tmp2, true), false);
     }
 
 }

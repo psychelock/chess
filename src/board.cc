@@ -129,7 +129,7 @@ namespace board
         return res;
     }
 
-    bool ChessBoard::valid_move(const PgnMove& move)
+    bool ChessBoard::valid_move(const PgnMove& move, bool test)
     {
         if(all_moves_.size() == 0)
             all_moves_ = possible_moves();
@@ -141,7 +141,7 @@ namespace board
             Color oppcol = (turn_ == Color::WHITE) ? Color::BLACK : Color::WHITE;
             if (is_check(oppcol, 0))
             {
-               // undo_move();
+                //undo_move();
                 return false;
             }
             oppcol = (oppcol == Color::WHITE) ? Color::BLACK : Color::WHITE;
@@ -149,10 +149,12 @@ namespace board
             if(is_check(oppcol, 0))
             {
                 (*it).report_set(ReportType::CHECK);
-                undo_move(); //ADD WHILE TESTING
+                if(test)
+                    undo_move(); //ADD WHILE TESTING
                 return move.get_report() == ReportType::CHECK;
             }
-            undo_move(); //ADD WHILE TESTING
+            if(test)
+                undo_move(); //ADD WHILE TESTING
             return move.get_report() == ReportType::NONE; // not a check
         }
         return false;
@@ -442,6 +444,7 @@ namespace board
             do_move(move);
             if(!is_check(side, 0))
             {
+                undo_move();
                 return false;
             }
             undo_move();

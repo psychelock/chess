@@ -4,6 +4,7 @@
 #include "given/color.hh"
 
 #include <map>
+#include <list>
 #include <string>
 
 namespace board

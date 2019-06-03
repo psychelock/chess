@@ -43,16 +43,16 @@ namespace test
         PgnMove tmp6 = tools::create_pgnmove (File::B, Rank::SEVEN, File::B, \
                 Rank::SIX, PieceType::PAWN,\
                 false, ReportType::NONE, nnull);
-        ASSERT_EQ(game.valid_move(tmp1), true);
-        ASSERT_EQ(game.valid_move(tmp2), true);
-        ASSERT_EQ(game.valid_move(tmp3), true);
-        ASSERT_EQ(game.valid_move(tmp4), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
+        ASSERT_EQ(game.valid_move(tmp3, true), true);
+        ASSERT_EQ(game.valid_move(tmp4, true), true);
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
 
-        ASSERT_EQ(game.valid_move(tmp5), true);
-        ASSERT_EQ(game.valid_move(tmp6), true);
+        ASSERT_EQ(game.valid_move(tmp5, true), true);
+        ASSERT_EQ(game.valid_move(tmp6, true), true);
 
     }
 
@@ -73,14 +73,14 @@ namespace test
                 Rank::FIVE, PieceType::PAWN,\
                 false, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp), true);
-        ASSERT_EQ(game.valid_move(tmp1), true);
+        ASSERT_EQ(game.valid_move(tmp, true), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
 
-        ASSERT_EQ(game.valid_move(tmp2), true);
-        ASSERT_EQ(game.valid_move(tmp3), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
+        ASSERT_EQ(game.valid_move(tmp3, true), true);
 
     }
 
@@ -110,17 +110,17 @@ namespace test
                 Rank::FIVE, PieceType::PAWN,\
                 false, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp1), false);
-        ASSERT_EQ(game.valid_move(tmp2), false);
-        ASSERT_EQ(game.valid_move(tmp3), false);
-        ASSERT_EQ(game.valid_move(tmp4), false);
+        ASSERT_EQ(game.valid_move(tmp1, true), false);
+        ASSERT_EQ(game.valid_move(tmp2, true), false);
+        ASSERT_EQ(game.valid_move(tmp3, true), false);
+        ASSERT_EQ(game.valid_move(tmp4, true), false);
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
 
-        ASSERT_EQ(game.valid_move(tmp5), false);
-        ASSERT_EQ(game.valid_move(tmp6), false);
-        ASSERT_EQ(game.valid_move(tmp7), false);
+        ASSERT_EQ(game.valid_move(tmp5, true), false);
+        ASSERT_EQ(game.valid_move(tmp6, true), false);
+        ASSERT_EQ(game.valid_move(tmp7, true), false);
 
     }
 
@@ -141,14 +141,14 @@ namespace test
                 Rank::SIX, PieceType::PAWN,\
                 true, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp1), true);
-        ASSERT_EQ(game.valid_move(tmp2), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
 
-        ASSERT_EQ(game.valid_move(tmp3), true);
-        ASSERT_EQ(game.valid_move(tmp4), true);
+        ASSERT_EQ(game.valid_move(tmp3, true), true);
+        ASSERT_EQ(game.valid_move(tmp4, true), true);
     }
 
     TEST(PawnTest, Check) 
@@ -166,12 +166,12 @@ namespace test
            std::cout << "\n";
 
 
-        ASSERT_EQ(game.valid_move(tmp1), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
 
-        ASSERT_EQ(game.valid_move(tmp2), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
 
     }
 }

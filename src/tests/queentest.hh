@@ -55,8 +55,8 @@ namespace test
                 Rank::SEVEN, PieceType::QUEEN,\
                 false, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp1), true);
-        ASSERT_EQ(game.valid_move(tmp5), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
+        ASSERT_EQ(game.valid_move(tmp5, true), true);
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
@@ -66,13 +66,13 @@ namespace test
         std::cout << "\n";
          */
 
-        ASSERT_EQ(game.valid_move(tmp9), true);
-        ASSERT_EQ(game.valid_move(tmp10), true);
-        ASSERT_EQ(game.valid_move(tmp11), true);
-        ASSERT_EQ(game.valid_move(tmp12), true);
-        ASSERT_EQ(game.valid_move(tmp13), true);
-        ASSERT_EQ(game.valid_move(tmp15), true);
-        ASSERT_EQ(game.valid_move(tmp16), true);
+        ASSERT_EQ(game.valid_move(tmp9, true), true);
+        ASSERT_EQ(game.valid_move(tmp10, true), true);
+        ASSERT_EQ(game.valid_move(tmp11, true), true);
+        ASSERT_EQ(game.valid_move(tmp12, true), true);
+        ASSERT_EQ(game.valid_move(tmp13, true), true);
+        ASSERT_EQ(game.valid_move(tmp15, true), true);
+        ASSERT_EQ(game.valid_move(tmp16, true), true);
     
     }
     
@@ -93,7 +93,7 @@ namespace test
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-        ASSERT_EQ(game.valid_move(tmp2), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
 
     }
 
@@ -137,22 +137,22 @@ namespace test
                 Rank::SEVEN, PieceType::QUEEN,\
                 false, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp1), false);
-        ASSERT_EQ(game.valid_move(tmp2), false);
-        ASSERT_EQ(game.valid_move(tmp3), false);
-        ASSERT_EQ(game.valid_move(tmp4), false);
-        ASSERT_EQ(game.valid_move(tmp5), false);
+        ASSERT_EQ(game.valid_move(tmp1, true), false);
+        ASSERT_EQ(game.valid_move(tmp2, true), false);
+        ASSERT_EQ(game.valid_move(tmp3, true), false);
+        ASSERT_EQ(game.valid_move(tmp4, true), false);
+        ASSERT_EQ(game.valid_move(tmp5, true), false);
         game.set_turn(Color::BLACK);
         game.calculate_moves();
  /*       std::cout << "\n";
         game.print_possible_moves(game.possible_moves());
         std::cout << "\n";*/
-        ASSERT_EQ(game.valid_move(tmp6), false);
-        ASSERT_EQ(game.valid_move(tmp7), false);
-        ASSERT_EQ(game.valid_move(tmp8), false);
-        ASSERT_EQ(game.valid_move(tmp9), false);
-        ASSERT_EQ(game.valid_move(tmp10), false);
-        ASSERT_EQ(game.valid_move(tmp11), false);
+        ASSERT_EQ(game.valid_move(tmp6, true), false);
+        ASSERT_EQ(game.valid_move(tmp7, true), false);
+        ASSERT_EQ(game.valid_move(tmp8, true), false);
+        ASSERT_EQ(game.valid_move(tmp9, true), false);
+        ASSERT_EQ(game.valid_move(tmp10, true), false);
+        ASSERT_EQ(game.valid_move(tmp11, true), false);
 
     }
 
@@ -179,14 +179,14 @@ namespace test
         PgnMove tmp6 = tools::create_pgnmove (File::E, Rank::SEVEN, File::H, \
                 Rank::TWO, PieceType::QUEEN,\
                 false, ReportType::NONE, nnull);
-        ASSERT_EQ(game.valid_move(tmp1), false);
-        ASSERT_EQ(game.valid_move(tmp2), false);
-        ASSERT_EQ(game.valid_move(tmp3), false);
+        ASSERT_EQ(game.valid_move(tmp1, true), false);
+        ASSERT_EQ(game.valid_move(tmp2, true), false);
+        ASSERT_EQ(game.valid_move(tmp3, true), false);
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-        ASSERT_EQ(game.valid_move(tmp4), false);
-        ASSERT_EQ(game.valid_move(tmp5), false);
-        ASSERT_EQ(game.valid_move(tmp6), false);
+        ASSERT_EQ(game.valid_move(tmp4, true), false);
+        ASSERT_EQ(game.valid_move(tmp5, true), false);
+        ASSERT_EQ(game.valid_move(tmp6, true), false);
 
     } 
     
@@ -204,11 +204,11 @@ namespace test
         PgnMove tmp4 = tools::create_pgnmove (File::E, Rank::SEVEN, File::E, \
                 Rank::FOUR, PieceType::QUEEN,\
                 false, ReportType::CHECK, nnull);
-        ASSERT_EQ(game.valid_move(tmp1), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-        ASSERT_EQ(game.valid_move(tmp3), true);
-        ASSERT_EQ(game.valid_move(tmp4), true);
+        ASSERT_EQ(game.valid_move(tmp3, true), true);
+        ASSERT_EQ(game.valid_move(tmp4, true), true);
     }
 
 

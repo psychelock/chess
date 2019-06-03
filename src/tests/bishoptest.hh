@@ -43,8 +43,8 @@ namespace test
                 Rank::FIVE, PieceType::BISHOP,\
                 false, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp1), true);
-        ASSERT_EQ(game.valid_move(tmp2), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
@@ -54,9 +54,9 @@ namespace test
         std::cout << "\n";
         */
 
-        ASSERT_EQ(game.valid_move(tmp3), true);
-        ASSERT_EQ(game.valid_move(tmp4), true);
-        ASSERT_EQ(game.valid_move(tmp5), true);
+        ASSERT_EQ(game.valid_move(tmp3, true), true);
+        ASSERT_EQ(game.valid_move(tmp4, true), true);
+        ASSERT_EQ(game.valid_move(tmp5, true), true);
     
     }
     
@@ -76,13 +76,13 @@ namespace test
                 Rank::SIX, PieceType::BISHOP,\
                 true, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp4), true);
+        ASSERT_EQ(game.valid_move(tmp4, true), true);
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
 
-        ASSERT_EQ(game.valid_move(tmp1), true);
-        ASSERT_EQ(game.valid_move(tmp2), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
 
     }
 
@@ -113,17 +113,17 @@ namespace test
                 Rank::TWO, PieceType::BISHOP,\
                 false, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp6), false);
-        ASSERT_EQ(game.valid_move(tmp7), false);
+        ASSERT_EQ(game.valid_move(tmp6, true), false);
+        ASSERT_EQ(game.valid_move(tmp7, true), false);
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
 
-        ASSERT_EQ(game.valid_move(tmp1), false);
-        ASSERT_EQ(game.valid_move(tmp2), false);
-        ASSERT_EQ(game.valid_move(tmp3), false);
-        ASSERT_EQ(game.valid_move(tmp4), false);
-        ASSERT_EQ(game.valid_move(tmp5), false);
+        ASSERT_EQ(game.valid_move(tmp1, true), false);
+        ASSERT_EQ(game.valid_move(tmp2, true), false);
+        ASSERT_EQ(game.valid_move(tmp3, true), false);
+        ASSERT_EQ(game.valid_move(tmp4, true), false);
+        ASSERT_EQ(game.valid_move(tmp5, true), false);
     }
 
     TEST(BishopTest, RandomMoves) 
@@ -150,12 +150,12 @@ namespace test
                 Rank::TWO, PieceType::BISHOP,\
                 false, ReportType::NONE, nnull);
     
-        ASSERT_EQ(game.valid_move(tmp1), false);
-        ASSERT_EQ(game.valid_move(tmp2), false);
-        ASSERT_EQ(game.valid_move(tmp3), false);
-        ASSERT_EQ(game.valid_move(tmp4), false);
-        ASSERT_EQ(game.valid_move(tmp5), false);
-        ASSERT_EQ(game.valid_move(tmp6), false);
+        ASSERT_EQ(game.valid_move(tmp1, true), false);
+        ASSERT_EQ(game.valid_move(tmp2, true), false);
+        ASSERT_EQ(game.valid_move(tmp3, true), false);
+        ASSERT_EQ(game.valid_move(tmp4, true), false);
+        ASSERT_EQ(game.valid_move(tmp5, true), false);
+        ASSERT_EQ(game.valid_move(tmp6, true), false);
 
     }
 
@@ -173,11 +173,11 @@ namespace test
         PgnMove tmp3 = tools::create_pgnmove (File::E, Rank::FOUR, File::F, \
                 Rank::THREE, PieceType::BISHOP,\
                 false, ReportType::CHECK, nnull);
-        ASSERT_EQ(game.valid_move(tmp1), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-        ASSERT_EQ(game.valid_move(tmp2), true);
-        ASSERT_EQ(game.valid_move(tmp3), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
+        ASSERT_EQ(game.valid_move(tmp3, true), true);
     }
 
 

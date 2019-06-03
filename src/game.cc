@@ -8,11 +8,12 @@ namespace gameloop
         void *create = dlsym(handle, "listener_create");
         listener::Listener *lis = reinterpret_cast<listener::Listener*(*)()>(create)();
         lis->register_board(board);
-        int i = 0;
+        long unsigned int i = 0;
         do
         {
+            if(i >= list.size())
+                break;
             auto move = list.at(i); i++;
-            board.do_move(move);
             if(!board.valid_move(move)) 
                 break;
             if(move.get_piece() == PieceType::KING) // castling
@@ -38,7 +39,7 @@ namespace gameloop
                 {
                     lis->on_piece_taken(move.get_piece(), move.get_end());
                 }
-                if(move.get_piece() == PieceType::PAWN && (end <=  98 || end >= 91)) //promotion
+                if(move.get_piece() == PieceType::PAWN && (end <=  98 && end >= 91)) //promotion
                     lis->on_piece_promoted(move.get_piece(), move.get_end());
             }
             if(board.is_checkmate(board.get_turn()))
@@ -56,8 +57,12 @@ namespace gameloop
                 lis->on_draw();
                 break;
             }
+            board.calculate_moves();
+            board.dump_board();
+            getchar();
             // Check for special draws !
         }while(true);
+        board.dump_board();
         lis->on_game_finished();
         free(lis);
         dlclose(handle);

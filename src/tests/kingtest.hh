@@ -47,15 +47,15 @@ namespace test
         std::cout << "\n";
         */
 
-        ASSERT_EQ(game.valid_move(tmp1), true);
-        ASSERT_EQ(game.valid_move(tmp2), true);
-        ASSERT_EQ(game.valid_move(tmp3), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
+        ASSERT_EQ(game.valid_move(tmp3, true), true);
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-        ASSERT_EQ(game.valid_move(tmp7), true);
-        ASSERT_EQ(game.valid_move(tmp8), true);
-        ASSERT_EQ(game.valid_move(tmp9), true);
+        ASSERT_EQ(game.valid_move(tmp7, true), true);
+        ASSERT_EQ(game.valid_move(tmp8, true), true);
+        ASSERT_EQ(game.valid_move(tmp9, true), true);
     
     }
     
@@ -75,11 +75,11 @@ namespace test
                 Rank::EIGHT, PieceType::KING,\
                 true, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp1), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-        ASSERT_EQ(game.valid_move(tmp2), true);
-        ASSERT_EQ(game.valid_move(tmp5), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
+        ASSERT_EQ(game.valid_move(tmp5, true), true);
 
     }
 
@@ -99,13 +99,13 @@ namespace test
                 Rank::SIX, PieceType::KING,\
                 false, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp1), false);
+        ASSERT_EQ(game.valid_move(tmp1, true), false);
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
 
-        ASSERT_EQ(game.valid_move(tmp2), false);
-        ASSERT_EQ(game.valid_move(tmp3), false);
+        ASSERT_EQ(game.valid_move(tmp2, true), false);
+        ASSERT_EQ(game.valid_move(tmp3, true), false);
     }
 
     TEST(KingTest, RandomMoves) 
@@ -132,12 +132,12 @@ namespace test
                 Rank::TWO, PieceType::KING,\
                 false, ReportType::NONE, nnull);
     
-        ASSERT_EQ(game.valid_move(tmp1), false);
-        ASSERT_EQ(game.valid_move(tmp2), false);
-        ASSERT_EQ(game.valid_move(tmp3), false);
-        ASSERT_EQ(game.valid_move(tmp4), false);
-        ASSERT_EQ(game.valid_move(tmp5), false);
-        ASSERT_EQ(game.valid_move(tmp6), false);
+        ASSERT_EQ(game.valid_move(tmp1, true), false);
+        ASSERT_EQ(game.valid_move(tmp2, true), false);
+        ASSERT_EQ(game.valid_move(tmp3, true), false);
+        ASSERT_EQ(game.valid_move(tmp4, true), false);
+        ASSERT_EQ(game.valid_move(tmp5, true), false);
+        ASSERT_EQ(game.valid_move(tmp6, true), false);
 
     }
 

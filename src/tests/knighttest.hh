@@ -43,15 +43,15 @@ namespace test
                 Rank::FOUR, PieceType::KNIGHT,\
                 false, ReportType::NONE, nnull);
 
-        ASSERT_EQ(game.valid_move(tmp1), true);
-        ASSERT_EQ(game.valid_move(tmp2), true);
-        ASSERT_EQ(game.valid_move(tmp3), true);
-        ASSERT_EQ(game.valid_move(tmp4), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
+        ASSERT_EQ(game.valid_move(tmp3, true), true);
+        ASSERT_EQ(game.valid_move(tmp4, true), true);
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-        ASSERT_EQ(game.valid_move(tmp5), true);
-        ASSERT_EQ(game.valid_move(tmp6), true);
+        ASSERT_EQ(game.valid_move(tmp5, true), true);
+        ASSERT_EQ(game.valid_move(tmp6, true), true);
     
     }
     
@@ -69,13 +69,13 @@ namespace test
                 true, ReportType::NONE, nnull);
 
 
-        ASSERT_EQ(game.valid_move(tmp1), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
         game.set_turn(Color::BLACK);
         game.calculate_moves();
         /*std::cout << "\n";
         game.print_possible_moves(game.possible_moves());
         std::cout << "\n";*/
-        ASSERT_EQ(game.valid_move(tmp2), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
 
     }
 
@@ -98,12 +98,12 @@ namespace test
                 false, ReportType::NONE, nnull);
 
 
-        ASSERT_EQ(game.valid_move(tmp1), false);
-        ASSERT_EQ(game.valid_move(tmp2), false);
-        ASSERT_EQ(game.valid_move(tmp3), false);
+        ASSERT_EQ(game.valid_move(tmp1, true), false);
+        ASSERT_EQ(game.valid_move(tmp2, true), false);
+        ASSERT_EQ(game.valid_move(tmp3, true), false);
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-        ASSERT_EQ(game.valid_move(tmp4), false);
+        ASSERT_EQ(game.valid_move(tmp4, true), false);
     }
 
     TEST(KnightTest, RandomMoves) 
@@ -130,14 +130,14 @@ namespace test
                 Rank::TWO, PieceType::KNIGHT,\
                 false, ReportType::NONE, nnull);
     
-        ASSERT_EQ(game.valid_move(tmp1), false);
-        ASSERT_EQ(game.valid_move(tmp2), false);
-        ASSERT_EQ(game.valid_move(tmp3), false);
+        ASSERT_EQ(game.valid_move(tmp1, true), false);
+        ASSERT_EQ(game.valid_move(tmp2, true), false);
+        ASSERT_EQ(game.valid_move(tmp3, true), false);
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-        ASSERT_EQ(game.valid_move(tmp4), false);
-        ASSERT_EQ(game.valid_move(tmp5), false);
-        ASSERT_EQ(game.valid_move(tmp6), false);
+        ASSERT_EQ(game.valid_move(tmp4, true), false);
+        ASSERT_EQ(game.valid_move(tmp5, true), false);
+        ASSERT_EQ(game.valid_move(tmp6, true), false);
 
     }
 
@@ -156,8 +156,8 @@ namespace test
         game.set_turn(Color::BLACK);
         game.calculate_moves();
         
-        ASSERT_EQ(game.valid_move(tmp1), true);
-        ASSERT_EQ(game.valid_move(tmp2), true);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
+        ASSERT_EQ(game.valid_move(tmp2, true), true);
     }
 
 }

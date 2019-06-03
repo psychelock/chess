@@ -34,7 +34,7 @@ namespace board
             opt_piece_t create_piece(char c);
             std::string dump_board();
 
-            bool valid_move(const PgnMove&);
+            bool valid_move(const PgnMove&, bool test = false);
             void create_board(std::string);
             std::list<PgnMove> possible_moves(void);
             void print_possible_moves(const std::list<PgnMove>& moves);
