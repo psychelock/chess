@@ -7,7 +7,8 @@
 
 namespace test
 {
-    constexpr char splsetup[] = "rn2k2r/8/8/1b6/8/8/8/R3K2R";
+    constexpr char splsetup[] = "rn2k2r/8/8/1b4q1/8/8/8/R3K2R";
+    constexpr char checkmate[] = "r6k/7p/8/3B4/8/p5K1/5B2/8";
 
     TEST(SplBoard, BoardSetup)
     {
@@ -15,7 +16,7 @@ namespace test
         ASSERT_EQ(game.dump_board(), tools::dump_board_from_fen(splsetup));
 
     }
-    TEST(SpecialTest, CastlingValidMoves) 
+    TEST(SpecialTest, CastlingValidMoves)
     {
         ChessBoard game(splsetup);
         std::optional<PieceType> nnull = std::nullopt;
@@ -33,7 +34,7 @@ namespace test
         game.calculate_moves();
         ASSERT_EQ(game.valid_move(tmp2, true), true);
     }
-    TEST(SpecialTest, CastlingInvalid) 
+    TEST(SpecialTest, CastlingInvalid)
     {
         ChessBoard game(splsetup);
         std::optional<PieceType> nnull = std::nullopt;
@@ -51,5 +52,14 @@ namespace test
         game.calculate_moves();
         ASSERT_EQ(game.valid_move(tmp2, true), false);
     }
+    TEST(SpecialTest, Checkmate)
+    {
+        ChessBoard game(checkmate);
+        std::optional<PieceType> nnull = std::nullopt;
 
+        PgnMove tmp1 = tools::create_pgnmove(File::F, Rank::TWO, File::D,\
+                Rank::FOUR, PieceType::BISHOP,\
+                false, ReportType::CHECKMATE, nnull);
+        ASSERT_EQ(game.valid_move(tmp1, true), true);
+    }
 }

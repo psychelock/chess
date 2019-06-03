@@ -16,7 +16,7 @@ namespace test
         ASSERT_EQ(game.dump_board(), tools::dump_board_from_fen(setupknight));
     }
 
-    TEST(KnightTest, ValidMoves) 
+    TEST(KnightTest, ValidMoves)
     {
         ChessBoard game(setupknight);
         std::optional<PieceType> nnull = std::nullopt;
@@ -52,11 +52,9 @@ namespace test
         game.calculate_moves();
         ASSERT_EQ(game.valid_move(tmp5, true), true);
         ASSERT_EQ(game.valid_move(tmp6, true), true);
-    
     }
-    
 
-    TEST(KnightTest, CaptureMoves) 
+    TEST(KnightTest, CaptureMoves)
     {
         ChessBoard game(setupknight);
         std::optional<PieceType> nnull = std::nullopt;
@@ -79,7 +77,7 @@ namespace test
 
     }
 
-    TEST(KnightTest, InvalidMoves) 
+    TEST(KnightTest, InvalidMoves)
     {
         ChessBoard game(setupknight);
         std::optional<PieceType> nnull = std::nullopt;
@@ -106,7 +104,7 @@ namespace test
         ASSERT_EQ(game.valid_move(tmp4, true), false);
     }
 
-    TEST(KnightTest, RandomMoves) 
+    TEST(KnightTest, RandomMoves)
     {
         ChessBoard game(setupknight);
         std::optional<PieceType> nnull = std::nullopt;
@@ -129,7 +127,6 @@ namespace test
         PgnMove tmp6 = tools::create_pgnmove (File::A, Rank::EIGHT, File::H, \
                 Rank::TWO, PieceType::KNIGHT,\
                 false, ReportType::NONE, nnull);
-    
         ASSERT_EQ(game.valid_move(tmp1, true), false);
         ASSERT_EQ(game.valid_move(tmp2, true), false);
         ASSERT_EQ(game.valid_move(tmp3, true), false);
@@ -142,7 +139,7 @@ namespace test
     }
 
     TEST(KnightTest, Check)
-    { 
+    {
 
         ChessBoard game(setupknight);
         std::optional<PieceType> nnull = std::nullopt;
@@ -155,7 +152,6 @@ namespace test
                 true, ReportType::CHECK, nnull);
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-        
         ASSERT_EQ(game.valid_move(tmp1, true), true);
         ASSERT_EQ(game.valid_move(tmp2, true), true);
     }

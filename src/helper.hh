@@ -15,9 +15,7 @@ namespace board
         Color t_;
         std::string cast_;
         std::string en_p_;
-        
         Previous(std::map<int, std::optional<std::pair<PieceType, Color>>> b, Color t, std::string cast,std::string en_p);
-        
         Previous(void);
     };
 

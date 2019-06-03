@@ -148,18 +148,22 @@ namespace board
 
             if(is_check(oppcol, 0))
             {
-                (*it).report_set(ReportType::CHECK);
-                if(test) //undo only while testing
-                    undo_move();
-                return move.get_report() == ReportType::CHECK;
-            }
-            oppcol = (oppcol == Color::WHITE) ? Color::BLACK : Color::WHITE;
-            if(is_checkmate(oppcol))
-            {
-                (*it).report_set(ReportType::CHECKMATE);
-                if(test) //undo only while testing
-                    undo_move();
-                return move.get_report() == ReportType::CHECKMATE;
+                oppcol = (oppcol == Color::WHITE) ? Color::BLACK : Color::WHITE;
+                if(is_checkmate(oppcol))
+                {
+                    (*it).report_set(ReportType::CHECKMATE);
+                    if(test) //undo only while testing
+                        undo_move();
+                    return move.get_report() == ReportType::CHECKMATE;
+
+                }
+                else
+                {
+                    (*it).report_set(ReportType::CHECK);
+                    if(test) //undo only while testing
+                        undo_move();
+                    return move.get_report() == ReportType::CHECK;
+                }
             }
             if(test) // undo only while testing
                 undo_move();
@@ -289,9 +293,9 @@ namespace board
                             continue;
                         auto dest_piece = board_[dest_int]; // optional pair of piece type and color
                         if(i%10 == 0 && dest_piece != std::nullopt)  // pawn cant move forward
-                                continue;
+                            continue;
                         else if(i == 20 && board_[dest_int - (10 * side)] != std::nullopt)   // pawn cant jump hey (double forward)
-                                continue;
+                            continue;
                         else if(i%10 != 0)
                         {
                             if(dest_piece == std::nullopt || dest_piece->second == turn_)
