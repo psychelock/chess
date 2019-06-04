@@ -60,11 +60,6 @@ namespace test
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
-        /*
-        std::cout << "\n";
-        game.print_possible_moves(game.possible_moves());
-        std::cout << "\n";
-         */
 
         ASSERT_EQ(game.valid_move(tmp9, true), true);
         ASSERT_EQ(game.valid_move(tmp10, true), true);
@@ -81,11 +76,6 @@ namespace test
     {
         ChessBoard game(setupqueen);
         std::optional<PieceType> nnull = std::nullopt;
-/*
-        std::cout << "\n";
-        game.print_possible_moves(game.possible_moves());
-        std::cout << "\n";
-        */
         PgnMove tmp2 = tools::create_pgnmove (File::E, Rank::SEVEN, File::F, \
                 Rank::EIGHT, PieceType::QUEEN,\
                 true, ReportType::NONE, nnull);
@@ -144,9 +134,6 @@ namespace test
         ASSERT_EQ(game.valid_move(tmp5, true), false);
         game.set_turn(Color::BLACK);
         game.calculate_moves();
- /*       std::cout << "\n";
-        game.print_possible_moves(game.possible_moves());
-        std::cout << "\n";*/
         ASSERT_EQ(game.valid_move(tmp6, true), false);
         ASSERT_EQ(game.valid_move(tmp7, true), false);
         ASSERT_EQ(game.valid_move(tmp8, true), false);

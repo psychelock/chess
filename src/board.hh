@@ -14,6 +14,7 @@
 #include <memory>
 #include <algorithm>
 #include <iostream>
+#include <stack>
 
 namespace board
 {
@@ -26,7 +27,7 @@ namespace board
             std::string castling_;
             std::string en_passant_;
             std::list<PgnMove> all_moves_;
-            Previous pvs_;
+            std::stack<Previous> pvs_;
 
         public:
             ChessBoard(std::string setup);

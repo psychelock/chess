@@ -7,8 +7,9 @@
 
 namespace test
 {
-    constexpr char splsetup[] = "rn2k2r/8/8/1b4q1/8/8/8/R3K2R";
-    constexpr char checkmate[] = "r6k/7p/8/3B4/8/p5K1/5B2/8";
+    constexpr char splsetup[] = "rn2k2r/8/8/1b6/8/8/8/R3K2R";
+    constexpr char checkmate1[] = "r6k/7p/8/3B4/8/p5K1/5B2/8";
+    constexpr char checkmate2[] = "kr6/pp6/8/QN2P3/6p1/1P2q3/KP6/8";
 
     TEST(SplBoard, BoardSetup)
     {
@@ -54,12 +55,18 @@ namespace test
     }
     TEST(SpecialTest, Checkmate)
     {
-        ChessBoard game(checkmate);
+        ChessBoard game1(checkmate1);
+        ChessBoard game2(checkmate2);
         std::optional<PieceType> nnull = std::nullopt;
 
         PgnMove tmp1 = tools::create_pgnmove(File::F, Rank::TWO, File::D,\
                 Rank::FOUR, PieceType::BISHOP,\
                 false, ReportType::CHECKMATE, nnull);
-        ASSERT_EQ(game.valid_move(tmp1, true), true);
+        PgnMove tmp2 = tools::create_pgnmove(File::B, Rank::FIVE, File::C,\
+                Rank::SEVEN, PieceType::KNIGHT,\
+                false, ReportType::CHECKMATE, nnull);
+        
+        ASSERT_EQ(game1.valid_move(tmp1, true), true);
+        ASSERT_EQ(game2.valid_move(tmp2, true), true);
     }
 }

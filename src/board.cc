@@ -34,7 +34,6 @@ namespace board
         }
         create_board(setup);
         calculate_moves();
-        pvs_ = Previous();
     }
 
     void ChessBoard::calculate_moves(void)
@@ -129,10 +128,9 @@ namespace board
         return res;
     }
 
-    bool ChessBoard::valid_move(const PgnMove& move, bool test) // FIXME add checkmate
+    bool ChessBoard::valid_move(const PgnMove& move, bool test)
     {
-        if(all_moves_.size() == 0)
-            all_moves_ = possible_moves();
+        all_moves_ = possible_moves();
 
         auto it =  std::find(all_moves_.begin(), all_moves_.end(), move);
         if(it != all_moves_.end())
@@ -148,7 +146,6 @@ namespace board
 
             if(is_check(oppcol, 0))
             {
-                oppcol = (oppcol == Color::WHITE) ? Color::BLACK : Color::WHITE;
                 if(is_checkmate(oppcol))
                 {
                     (*it).report_set(ReportType::CHECKMATE);
@@ -174,10 +171,12 @@ namespace board
 
     void ChessBoard::undo_move(void)
     {
-        this->board_ = pvs_.b_;
-        this->turn_ = pvs_.t_;
-        this->castling_ = pvs_.cast_;
-        this->en_passant_ = pvs_.en_p_;
+        auto tmp = pvs_.top();
+        this->board_ = tmp.get_b();
+        this->turn_ = tmp.get_t();
+        this->castling_ = tmp.get_cast();
+        this->en_passant_ = tmp.get_en_p();
+        pvs_.pop();
     }
 
     std::optional<PgnMove> ChessBoard::add_castling_aux(int pos, int side)
@@ -377,7 +376,10 @@ namespace board
             for(auto const&[index, piece] : board_)
                 if(piece != std::nullopt)
                     if(piece->first == PieceType::KING && piece->second == kingcolor)
+                    {
                         pos = index;
+                        break;
+                    }
         }
         else
             pos = position;
@@ -394,7 +396,7 @@ namespace board
 
     void ChessBoard::do_move(PgnMove move)
     {
-        pvs_ = Previous(board_, turn_, castling_, en_passant_);
+        pvs_.push(Previous(board_, turn_, castling_, en_passant_));
         auto from = tools::get_index(move.get_start());
         auto to = tools::get_index(move.get_end());
 
@@ -451,6 +453,7 @@ namespace board
 
     bool ChessBoard::is_checkmate(Color side)
     {
+        calculate_moves();
         for(auto move: all_moves_)
         {
             do_move(move);

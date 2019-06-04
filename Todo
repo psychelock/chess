@@ -1,5 +1,3 @@
-board is not updating properly in previous ! check knight capture tmp2
-incorporate ai inside gameloop
 handle listener option
 fill pawn movements from school computer
 

@@ -123,9 +123,9 @@ constexpr double KingEvalBlack[8][8] =
 
 namespace ai
 {
-    std::optional<board::PgnMove> ai (int depth, board::ChessBoard game, bool black)
+    board::PgnMove ai (int depth, board::ChessBoard game, bool black)
     {
-        std::list<PgnMove> raw_data = game.possible_moves();
+        auto raw_data = game.possible_moves();
         int bestmove = -9999;
         int i = 0;
         int index = 0;
@@ -141,19 +141,11 @@ namespace ai
             }
             i++;
         }
-        int count = 0;
-        for(auto move : raw_data)
-        {
-            if(count == index)
-                return move;
-            count++;
-        }
-        return std::nullopt;
+        return *(std::next(raw_data.begin(), index));
     }
 
     int minimax(int depth, board::ChessBoard game, int alpha, int beta, bool black)
     {
-        //int pos++; //FIXME idk what is this
         if(depth == 0)
             return evalBoard(game);
         auto raw = game.possible_moves();
@@ -171,7 +163,7 @@ namespace ai
             }
             return best;
         }
-        else
+        else // Minizing for white pieces
         {
             int best = 9999;
             for(auto move : raw)

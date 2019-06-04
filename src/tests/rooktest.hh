@@ -55,9 +55,6 @@ namespace test
 
         game.set_turn(Color::BLACK);
         game.calculate_moves();
- /*       std::cout << "\n";
-        game.print_possible_moves(game.possible_moves());
-        std::cout << "\n";*/
 
         ASSERT_EQ(game.valid_move(tmp6, true), true);
         ASSERT_EQ(game.valid_move(tmp7, true), true);

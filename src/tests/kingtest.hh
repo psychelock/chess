@@ -41,11 +41,6 @@ namespace test
                 Rank::SIX, PieceType::KING,\
                 false, ReportType::NONE, nnull);
 
-/*
-        std::cout << "\n";
-        game.print_possible_moves(game.possible_moves());
-        std::cout << "\n";
-        */
 
         ASSERT_EQ(game.valid_move(tmp1, true), true);
         ASSERT_EQ(game.valid_move(tmp2, true), true);

@@ -2,6 +2,15 @@
 
 namespace gameloop
 {
+    static PgnMove get_move(std::vector<PgnMove> list, long unsigned int i,\
+                            ChessBoard board)
+    {
+        if(i >= list.size())
+            return ai::ai(2, board, Color::BLACK == board.get_turn());
+        else
+            return list.at(i);
+    }
+
     int gameloop(ChessBoard board, std::vector<PgnMove> list)
     {  
         void *handle = dlopen("../src/given/tests/libbasic-output.so", RTLD_LAZY);
@@ -11,19 +20,8 @@ namespace gameloop
         long unsigned int i = 0;
         do
         {
-            if(i >= list.size())
-                break;
-            /*{
-                auto gen = ai::ai(1, board, (board.get_turn() == Color::BLACK)); // 1st param is depth
-                if(gen == std::nullopt)
-                    break;
-                else
-                    auto move = gen.value();
-            }
-            else
-            {*/
-                auto move = list.at(i); i++;
-            //}
+            auto move = get_move(list, i, board);
+            i++;
             if(!board.valid_move(move)) 
                 break;
             if(move.get_piece() == PieceType::KING) // castling
