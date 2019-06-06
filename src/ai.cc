@@ -125,7 +125,7 @@ namespace ai
 {
     board::PgnMove ai (int depth, board::ChessBoard game, bool black)
     {
-        auto raw_data = game.possible_moves();
+        auto raw_data = game.possible_moves(true);
         int bestmove = -9999;
         int i = 0;
         int index = 0;
@@ -169,7 +169,7 @@ namespace ai
     {
         if(depth == 0)
             return evalBoard(game);
-        auto raw = game.possible_moves();
+        auto raw = game.possible_moves(true);
         if(black) // Maximizing for black pieces
         {
             int best = -9999;

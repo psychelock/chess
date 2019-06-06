@@ -22,7 +22,7 @@ namespace test
         std::optional<PieceType> nnull = std::nullopt;
 
         /*std::cout << "\n";
-        game.print_possible_moves(game.possible_moves());
+        game.print_possible_moves(game.possible_moves(true));
         std::cout << "\n";*/
 
         PgnMove tmp1 = tools::create_pgnmove (File::D, Rank::FOUR, File::C,\
@@ -59,7 +59,7 @@ namespace test
         ASSERT_EQ(game.valid_move(tmp5, true), true);
 
         game.set_turn(Color::BLACK);
-        game.calculate_moves();
+        game.calculate_moves(true);
 
         ASSERT_EQ(game.valid_move(tmp9, true), true);
         ASSERT_EQ(game.valid_move(tmp10, true), true);
@@ -82,7 +82,7 @@ namespace test
 
 
         game.set_turn(Color::BLACK);
-        game.calculate_moves();
+        game.calculate_moves(true);
         ASSERT_EQ(game.valid_move(tmp2, true), true);
 
     }
@@ -133,7 +133,7 @@ namespace test
         ASSERT_EQ(game.valid_move(tmp4, true), false);
         ASSERT_EQ(game.valid_move(tmp5, true), false);
         game.set_turn(Color::BLACK);
-        game.calculate_moves();
+        game.calculate_moves(true);
         ASSERT_EQ(game.valid_move(tmp6, true), false);
         ASSERT_EQ(game.valid_move(tmp7, true), false);
         ASSERT_EQ(game.valid_move(tmp8, true), false);
@@ -170,7 +170,7 @@ namespace test
         ASSERT_EQ(game.valid_move(tmp2, true), false);
         ASSERT_EQ(game.valid_move(tmp3, true), false);
         game.set_turn(Color::BLACK);
-        game.calculate_moves();
+        game.calculate_moves(true);
         ASSERT_EQ(game.valid_move(tmp4, true), false);
         ASSERT_EQ(game.valid_move(tmp5, true), false);
         ASSERT_EQ(game.valid_move(tmp6, true), false);
@@ -193,7 +193,7 @@ namespace test
                 false, ReportType::CHECK, nnull);
         ASSERT_EQ(game.valid_move(tmp1, true), true);
         game.set_turn(Color::BLACK);
-        game.calculate_moves();
+        game.calculate_moves(true);
         ASSERT_EQ(game.valid_move(tmp3, true), true);
         ASSERT_EQ(game.valid_move(tmp4, true), true);
     }

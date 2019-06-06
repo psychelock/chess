@@ -4,7 +4,7 @@ constexpr int direction[6] = {8, 8, 4, 4, 8, 0};
 
 constexpr int offset[6][8] = \
 {
-        { -11, -10, -9, -1, 1,  9, 10, 11 }, /* KING */
+    { -11, -10, -9, -1, 1,  9, 10, 11 }, /* KING */
         { -11, -10, -9, -1, 1,  9, 10, 11 }, /* QUEEN */
         { -10,  -1,  1, 10, 0,  0,  0,  0 }, /* ROOK */
         { -11,  -9,  9, 11, 0,  0,  0,  0 }, /* BISHOP */
@@ -33,12 +33,12 @@ namespace board
             board_[i] = std::nullopt;
         }
         create_board(setup);
-        calculate_moves();
+        calculate_moves(true);
     }
 
-    void ChessBoard::calculate_moves(void)
+    void ChessBoard::calculate_moves(bool reduce= true)
     {
-        all_moves_ = possible_moves();
+        all_moves_ = possible_moves(reduce);
     }
 
     ChessBoard::opt_piece_t ChessBoard::create_piece(char c)
@@ -130,7 +130,7 @@ namespace board
 
     bool ChessBoard::valid_move(const PgnMove& move, bool test)
     {
-        all_moves_ = possible_moves();
+        all_moves_ = possible_moves(true);
 
         auto it =  std::find(all_moves_.begin(), all_moves_.end(), move);
         if(it != all_moves_.end())
@@ -213,20 +213,25 @@ namespace board
             side = 1;
             auto tmp = add_castling_aux(pos, side);
             if(tmp != std::nullopt)
+            {
                 moves.insert(moves.end(), tmp.value());
+            }
         }
         if(castling_.find(queen) != std::string::npos)
         {
             side = -1;
             auto tmp = add_castling_aux(pos, side);
             if(tmp != std::nullopt)
+            {
                 moves.insert(moves.end(), tmp.value());
+            }
         }
         return moves;
     }
 
-    std::list<PgnMove> ChessBoard::possible_moves(void)
+    std::list<PgnMove> ChessBoard::possible_moves(bool reduce)
     {
+        reduce = reduce;
         std::list<PgnMove> moves;
         bool capture = false;
         int dest_int;
@@ -257,10 +262,12 @@ namespace board
                                     capture = true;
                             }
                             auto from  = tools::get_position(pos);
-                            PgnMove currentmove(from.value(), to.value(), pt, capture, \
-                                    ReportType::NONE);
-
-                            moves.insert(moves.end(), currentmove);
+                            auto oppcol = (Color::BLACK == turn_ ) ? Color::WHITE : Color::BLACK;
+                            if(!is_check(oppcol, 0))
+                            {
+                                PgnMove currentmove(from.value(), to.value(), pt, capture, ReportType::NONE);
+                                moves.insert(moves.end(), currentmove);
+                            }
                         }while(slide[piece_num] && (capture == false));
                     }
                 }
@@ -313,19 +320,49 @@ namespace board
                             }
                         }
                         auto from  = tools::get_position(pos);
-                        PgnMove currentmove(from.value(), to.value(), pt, capture, \
-                                ReportType::NONE);
-                        if(dest_int % 10 == 9)
+                        auto oppcol = (Color::BLACK == turn_ ) ? Color::WHITE : Color::BLACK;
+                        if(!is_check(oppcol, 0))
                         {
-                            currentmove.promotion_set(PieceType::QUEEN);
+                            PgnMove currentmove(from.value(), to.value(), pt, capture, \
+                                    ReportType::NONE);
+                            if(dest_int / 10 == 9 || dest_int / 10 == 2)
+                            {
+                                currentmove.promotion_set(PieceType::QUEEN);
+                            } 
+                            moves.insert(moves.end(), currentmove);
                         }
-                        moves.insert(moves.end(), currentmove);
                     }
                 }
             }
         }
-        //r1bq1rk1/pp2bppp/2n1pn2/2pP4/8/3P1NP1/PPP2PBP/RNBQ1RK1 w KQkq -
+        if(reduce)
+            moves = reduce_possible(moves);
         return moves;
+    }
+
+    std::list<PgnMove> ChessBoard::reduce_possible(std::list<PgnMove> list)
+    {
+        for(auto move: list)
+        {
+            do_move(move);
+            if(is_check(turn_, 0))
+            {
+                if(is_checkmate(turn_))
+                {
+                    undo_move();
+                    move.report_set(ReportType::CHECKMATE);
+                    continue;
+                }
+                else
+                {
+                    undo_move();
+                    move.report_set(ReportType::CHECK);
+                    continue;
+                }
+            }
+            undo_move();
+        }
+        return list;
     }
 
     void ChessBoard::print_possible_moves(const std::list<PgnMove>& moves)
@@ -452,6 +489,8 @@ namespace board
                 auto piece = move.get_promotion().value();
                 auto res = std::optional(std::make_pair(piece, turn_));
                 board_[to] = res;
+                turn_ = (turn_ == Color::WHITE) ? Color::BLACK : Color::WHITE;
+                return;
             }
         }
         auto res = board_[from];
@@ -467,8 +506,8 @@ namespace board
 
     bool ChessBoard::is_checkmate(Color side)
     {
-        calculate_moves();
-        for(auto move: all_moves_)
+        auto tmp = possible_moves(false);
+        for(auto move: tmp)
         {
             do_move(move);
             if(!is_check(side, 0))

@@ -23,7 +23,10 @@ namespace gameloop
             auto move = get_move(list, i, board);
             i++;
             if(!board.valid_move(move)) 
+            {
+                std::cout << "\nINVALID FIXME\n";
                 break;
+            }
             if(move.get_piece() == PieceType::KING) // castling
             {
                 int start = tools::get_index(move.get_start());
@@ -53,6 +56,7 @@ namespace gameloop
             if(board.is_checkmate(board.get_turn()))
             {
                 lis->on_player_mat(board.get_turn());
+                std::cout << "\nCHECKMATE\n";
                 break;
             }
             else if(board.is_check(board.get_turn(), 0))
@@ -63,11 +67,12 @@ namespace gameloop
             {
                 lis->on_player_pat(board.get_turn());
                 lis->on_draw();
+                std::cout << "\nSTALEMATE\n";
                 break;
             }
-            board.calculate_moves();
+            board.calculate_moves(true);
             board.dump_board();
-            getchar();
+            //getchar();
             // Check for special draws !
         }while(true);
         board.dump_board();

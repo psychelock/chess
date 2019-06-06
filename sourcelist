@@ -22,7 +22,6 @@ set(sources ${sources}
         src/parsing.cc
         src/parsing.hh
         src/tools.cc
-        src/perft.cc
         src/game.hh
         src/game.cc
         src/ai.cc

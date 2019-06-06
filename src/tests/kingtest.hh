@@ -47,7 +47,7 @@ namespace test
         ASSERT_EQ(game.valid_move(tmp3, true), true);
 
         game.set_turn(Color::BLACK);
-        game.calculate_moves();
+        game.calculate_moves(true);
         ASSERT_EQ(game.valid_move(tmp7, true), true);
         ASSERT_EQ(game.valid_move(tmp8, true), true);
         ASSERT_EQ(game.valid_move(tmp9, true), true);
@@ -72,7 +72,7 @@ namespace test
 
         ASSERT_EQ(game.valid_move(tmp1, true), true);
         game.set_turn(Color::BLACK);
-        game.calculate_moves();
+        game.calculate_moves(true);
         ASSERT_EQ(game.valid_move(tmp2, true), true);
         ASSERT_EQ(game.valid_move(tmp5, true), true);
 
@@ -97,7 +97,7 @@ namespace test
         ASSERT_EQ(game.valid_move(tmp1, true), false);
 
         game.set_turn(Color::BLACK);
-        game.calculate_moves();
+        game.calculate_moves(true);
 
         ASSERT_EQ(game.valid_move(tmp2, true), false);
         ASSERT_EQ(game.valid_move(tmp3, true), false);
