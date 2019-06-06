@@ -286,7 +286,7 @@ namespace board
                                     break;
                             }
                         }
-                        dest_int = pos + i * side;  
+                        dest_int = pos + i * side;
                         std::optional<Position> to = tools::get_position(dest_int);
                         if(to == std::nullopt) // out of bounds
                             continue;
@@ -301,19 +301,22 @@ namespace board
                             {
                                 if(tools::string_from_int(dest_int).compare(en_passant_) == 0)
                                     capture = true;
-                                if(dest_piece->second == turn_)
-                                    continue;
                                 else
                                     continue;
                             }
-                            capture = true;
+                            else
+                            {
+                                if (dest_piece->second != turn_)
+                                    capture = true;
+                                else
+                                    continue;
+                            }
                         }
                         auto from  = tools::get_position(pos);
                         PgnMove currentmove(from.value(), to.value(), pt, capture, \
                                 ReportType::NONE);
-                        
                         if(dest_int % 10 == 9)
-                        {    
+                        {
                             currentmove.promotion_set(PieceType::QUEEN);
                         }
                         moves.insert(moves.end(), currentmove);
@@ -321,6 +324,7 @@ namespace board
                 }
             }
         }
+        //r1bq1rk1/pp2bppp/2n1pn2/2pP4/8/3P1NP1/PPP2PBP/RNBQ1RK1 w KQkq -
         return moves;
     }
 
@@ -442,7 +446,7 @@ namespace board
                 else if (to >= 71 && to <= 78)
                     board_[60+tmp] = std::nullopt;
             }
-            else if(to >= 91 && to <= 98)
+            else if((to >= 91 && to <= 98) || (to >= 21 && to <= 28 ))
             {
                 board_[from] = std::nullopt;
                 auto piece = move.get_promotion().value();

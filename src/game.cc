@@ -67,6 +67,7 @@ namespace gameloop
             }
             board.calculate_moves();
             board.dump_board();
+            getchar();
             // Check for special draws !
         }while(true);
         board.dump_board();

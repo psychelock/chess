@@ -131,6 +131,10 @@ namespace ai
         int index = 0;
         for(auto it = raw_data.begin(); it != raw_data.end(); it++)
         {
+            if(!game.valid_move(*it), 1)
+            {
+                continue;
+            }
             game.do_move(*it);
             int val = minimax(depth -1 , game, -10000, 10000, !black);
             game.undo_move();
@@ -142,14 +146,21 @@ namespace ai
             i++;
         }
         auto move =  *(std::next(raw_data.begin(), index));
-        
         auto oppcol = (Color::WHITE == game.get_turn()) ? Color::BLACK : Color::WHITE;
+
+        game.do_move(move);
         if(game.is_check(oppcol, 0))
         {
             if(game.is_checkmate(oppcol))
+            {
+                game.undo_move();
                 move.report_set(ReportType::CHECKMATE);
+            }
             else
+            {
+                game.undo_move();
                 move.report_set(ReportType::CHECK);
+            }
         }
         return move;
     }
