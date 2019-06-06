@@ -116,4 +116,9 @@ namespace tools
         res + file + rank;
         return res;
     }
+    std::string string_from_int(int pos)
+    {
+        Position p = get_position(pos).value();
+        return string_from_pos(p);
+    }
 }

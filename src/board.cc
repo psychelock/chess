@@ -297,14 +297,25 @@ namespace board
                             continue;
                         else if(i%10 != 0)
                         {
-                            if(dest_piece == std::nullopt || dest_piece->second == turn_)
-                                continue;
+                            if(dest_piece == std::nullopt)
+                            {
+                                if(tools::string_from_int(dest_int).compare(en_passant_) == 0)
+                                    capture = true;
+                                if(dest_piece->second == turn_)
+                                    continue;
+                                else
+                                    continue;
+                            }
                             capture = true;
                         }
                         auto from  = tools::get_position(pos);
                         PgnMove currentmove(from.value(), to.value(), pt, capture, \
                                 ReportType::NONE);
-
+                        
+                        if(dest_int % 10 == 9)
+                        {    
+                            currentmove.promotion_set(PieceType::QUEEN);
+                        }
                         moves.insert(moves.end(), currentmove);
                     }
 

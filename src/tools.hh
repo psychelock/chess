@@ -18,4 +18,5 @@ namespace tools
     char get_char(PieceType p);
     int get_index(Position p);
     std::string string_from_pos(Position p);
+    std::string string_from_int(int pos);
 }

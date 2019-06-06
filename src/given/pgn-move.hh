@@ -31,7 +31,8 @@ namespace board
         static PgnMove generate_castling(bool queen_side, Color color);
 
         void report_set(ReportType report) { this->report_ = report; }
-        
+        void promotion_set(opt_piece_t pro) { this->promotion_ = pro; }
+
         Position get_start(void)       const   { return start_;}
         Position get_end(void)         const   { return end_; }
         bool get_capture(void)         const   { return capture_; }
