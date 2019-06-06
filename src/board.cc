@@ -318,7 +318,6 @@ namespace board
                         }
                         moves.insert(moves.end(), currentmove);
                     }
-
                 }
             }
         }

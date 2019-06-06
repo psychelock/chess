@@ -141,7 +141,17 @@ namespace ai
             }
             i++;
         }
-        return *(std::next(raw_data.begin(), index));
+        auto move =  *(std::next(raw_data.begin(), index));
+        
+        auto oppcol = (Color::WHITE == game.get_turn()) ? Color::BLACK : Color::WHITE;
+        if(game.is_check(oppcol, 0))
+        {
+            if(game.is_checkmate(oppcol))
+                move.report_set(ReportType::CHECKMATE);
+            else
+                move.report_set(ReportType::CHECK);
+        }
+        return move;
     }
 
     int minimax(int depth, board::ChessBoard game, int alpha, int beta, bool black)
@@ -204,20 +214,20 @@ namespace ai
                 val =  10 + ((pt.second == Color::WHITE) ? PawnEvalWhite[y][x] : PawnEvalBlack[y][x]);
                 break;
             case (PieceType::ROOK):
-                    val =  50 + ((pt.second == Color::WHITE) ? RookEvalWhite[y][x] : RookEvalBlack[y][x] );
-                    break;
+                val =  50 + ((pt.second == Color::WHITE) ? RookEvalWhite[y][x] : RookEvalBlack[y][x] );
+                break;
             case (PieceType::KNIGHT):
-                    val =  30 + KnightEval[y][x];
-                    break;
+                val =  30 + KnightEval[y][x];
+                break;
             case (PieceType::BISHOP):
-                    val =  30 + ((pt.second == Color::WHITE) ? BishopEvalWhite[y][x] : BishopEvalBlack[y][x] );
-                    break;
+                val =  30 + ((pt.second == Color::WHITE) ? BishopEvalWhite[y][x] : BishopEvalBlack[y][x] );
+                break;
             case (PieceType::QUEEN):
-                    val =  90 + QueenEval[y][x];
-                    break;
+                val =  90 + QueenEval[y][x];
+                break;
             default:
-                    val =  900 + ((pt.second == Color::WHITE) ? KingEvalWhite[y][x] : KingEvalBlack[y][x] );
-                    break;
+                val =  900 + ((pt.second == Color::WHITE) ? KingEvalWhite[y][x] : KingEvalBlack[y][x] );
+                break;
         }
         return (pt.second == Color::WHITE) ? val : -val;
     }
