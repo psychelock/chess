@@ -1,5 +1,8 @@
 #include "ai.hh"
 
+constexpr char init_setup[] = \
+                            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+
 constexpr double PawnEvalWhite[8][8]=
 {
     { 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
@@ -238,4 +241,171 @@ namespace ai
         }
         return (pt.second == Color::WHITE) ? val : -val;
     }
+
+    static File get_file_string(char a)
+    {
+        switch(a)
+        {
+            case 'a':
+                return File::A;
+            case 'b':
+                return File::B;
+            case 'c':
+                return File::C;
+            case 'd':
+                return File::D;
+            case 'e':
+                return File::E;
+            case 'f':
+                return File::F;
+            case 'g':
+                return File::G;
+            default:
+                return File::H;
+        }
+    }
+    static Rank get_rank_string(char a)
+    {
+        switch(a)
+        {
+            case '1':
+                return Rank::ONE;
+            case '2':
+                return Rank::TWO;
+            case '3':
+                return Rank::THREE;
+            case '4':
+                return Rank::FOUR;
+            case '5':
+                return Rank::FIVE;
+            case '6':
+                return Rank::SIX;
+            case '7':
+                return Rank::SEVEN;
+            default:
+                return Rank::EIGHT;
+        }
+    }
+
+    static PgnMove get_move(std::string move, ChessBoard board)
+    {
+        std::optional<PieceType> nnull = std::nullopt;
+        std::optional<PieceType> queen = PieceType::QUEEN;
+        auto capture = false;
+        auto startfile = get_file_string(move.at(0));
+        auto startrank = get_rank_string(move.at(1));
+        auto endfile = get_file_string(move.at(2));
+        auto endrank = get_rank_string(move.at(3));
+        Position start(startfile, startrank);
+        Position end(endfile, endrank);
+        if(board[end] != std::nullopt)
+        {
+            capture = true;
+        }
+        auto pt = board[start].value().first;
+        if((endrank == Rank::EIGHT || endrank == Rank::ONE) && (pt == PieceType::PAWN))
+            return tools::create_pgnmove(startfile, startrank, endfile,\
+                                        endrank, pt, capture, ReportType::NONE, queen);
+        else
+            return tools::create_pgnmove(startfile, startrank, endfile, \
+                                        endrank, pt, capture, ReportType::NONE, nnull);
+    }
+
+    static ChessBoard parse_moves(std::string board, std::string color,\
+                                    std::string castling, std::string en_passant,\
+                                    std::stringstream& ss)
+    {
+        ChessBoard res(board);
+        Color turn = (color.compare("w") == 0) ? Color::WHITE : Color::BLACK;
+        res.set_turn(turn);
+        res.set_castling(castling);
+        res.set_en_passant(en_passant);
+        std::string movestring;
+        while(ss >> movestring)
+        {
+            auto move = get_move(movestring, res);
+            res.do_move(move);
+        }
+
+        return res;
+    }
+
+
+    static ChessBoard parse_fen(std::stringstream& ss)
+    {
+        std::string board;
+        std::string color;
+        std::string en_passant;
+        std::string castling;
+        std::string ignore;
+        std::string moves;
+        ss >> board >> color >> castling >> en_passant >> ignore >> ignore;
+        if(!ss)
+        {
+            ChessBoard res(board);
+            Color turn = (color.compare("w") == 0) ? Color::WHITE : Color::BLACK;
+            res.set_turn(turn);
+            res.set_castling(castling);
+            res.set_en_passant(en_passant);
+            return res;
+        }
+        else
+        {
+            ss >> ignore; // the word moves
+            return parse_moves(board, color, castling, en_passant, ss);
+        }
+    }
+
+    static ChessBoard parse_startpos(std::stringstream& ss)
+    {
+        std::string word;
+        if(!ss)//moves are given
+            return ChessBoard (init_setup);
+        else
+        {
+            ss >> word; // the word moves
+            return parse_moves(init_setup, "w", "KQkq", "-", ss);
+        }
+    }
+
+    ChessBoard parse_uci(std::string str)
+    {
+        std::stringstream ss(str);
+        std::string word ;
+        ss >> word; // always position
+        ss >> word;
+        if(word.compare("startpos") == 0)
+        {
+            return parse_startpos(ss);
+        }
+        else //fen
+        {
+            return parse_fen(ss);
+        }
+    }
+
+    void engine(void)
+    {
+        std::string res = "";
+        ai::init("Mithun");
+        std::cerr << "\nbefore setup\n";
+        auto str = ai::get_board();
+        std::cerr << str;
+        auto game = parse_uci(str);
+        std::cerr << "\nafter setup\n";
+        while(true)
+        {
+            std::cerr << "in loop\n";
+            auto move = ai(2, game, game.get_turn() == Color::BLACK);
+            res = res + (tools::string_from_pos(move.get_start()));
+            res = res + (tools::string_from_pos(move.get_end()));
+            std::cerr << move << "\n";
+            std::cerr << "string : " << res << "\n";
+            ai::play_move(res);
+            game.calculate_moves(true);
+            game.do_move(move);
+            res.clear();
+        }
+    }
+
 }

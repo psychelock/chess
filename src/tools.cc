@@ -113,7 +113,8 @@ namespace tools
         char file = tolower(get_file(p.file_get()));
         std::string rank = std::to_string(utils::utype(p.rank_get()));
         std::string res = "";
-        res + file + rank;
+        res.push_back(file);
+        res.append(rank);
         return res;
     }
     std::string string_from_int(int pos)

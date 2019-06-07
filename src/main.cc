@@ -58,7 +58,7 @@ int main (int argc, char *argv[])
         }
         else
         {
-            board::ChessBoard game(init_setup);
+            ai::engine();
         }
     }
     catch(std::exception& e)
