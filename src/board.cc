@@ -262,12 +262,8 @@ namespace board
                                     capture = true;
                             }
                             auto from  = tools::get_position(pos);
-                            auto oppcol = (Color::BLACK == turn_ ) ? Color::WHITE : Color::BLACK;
-                            if(!is_check(oppcol, 0))
-                            {
-                                PgnMove currentmove(from.value(), to.value(), pt, capture, ReportType::NONE);
-                                moves.insert(moves.end(), currentmove);
-                            }
+                            PgnMove currentmove(from.value(), to.value(), pt, capture, ReportType::NONE);
+                            moves.insert(moves.end(), currentmove);
                         }while(slide[piece_num] && (capture == false));
                     }
                 }
@@ -320,49 +316,41 @@ namespace board
                             }
                         }
                         auto from  = tools::get_position(pos);
-                        auto oppcol = (Color::BLACK == turn_ ) ? Color::WHITE : Color::BLACK;
-                        if(!is_check(oppcol, 0))
+                        PgnMove currentmove(from.value(), to.value(), pt, capture, \
+                                ReportType::NONE);
+                        if(dest_int / 10 == 9 || dest_int / 10 == 2)
                         {
-                            PgnMove currentmove(from.value(), to.value(), pt, capture, \
-                                    ReportType::NONE);
-                            if(dest_int / 10 == 9 || dest_int / 10 == 2)
-                            {
-                                currentmove.promotion_set(PieceType::QUEEN);
-                            } 
-                            moves.insert(moves.end(), currentmove);
-                        }
+                            currentmove.promotion_set(PieceType::QUEEN);
+                        } 
+                        moves.insert(moves.end(), currentmove);
                     }
                 }
             }
         }
         if(reduce)
-            moves = reduce_possible(moves);
-        return moves;
-    }
-
-    std::list<PgnMove> ChessBoard::reduce_possible(std::list<PgnMove> list)
-    {
-        for(auto move: list)
         {
-            do_move(move);
-            if(is_check(turn_, 0))
+            for(auto move: moves)
             {
-                if(is_checkmate(turn_))
+                do_move(move);
+                if(is_check(turn_, 0))
                 {
-                    undo_move();
-                    move.report_set(ReportType::CHECKMATE);
-                    continue;
+                    if(is_checkmate(turn_))
+                    {
+                        undo_move();
+                        move.report_set(ReportType::CHECKMATE);
+                        continue;
+                    }
+                    else
+                    {
+                        undo_move();
+                        move.report_set(ReportType::CHECK);
+                        continue;
+                    }
                 }
-                else
-                {
-                    undo_move();
-                    move.report_set(ReportType::CHECK);
-                    continue;
-                }
+                undo_move();
             }
-            undo_move();
         }
-        return list;
+        return moves;
     }
 
     void ChessBoard::print_possible_moves(const std::list<PgnMove>& moves)
@@ -509,6 +497,7 @@ namespace board
         auto tmp = possible_moves(false);
         for(auto move: tmp)
         {
+            std::list<PgnMove> reduce_possible(std::list<PgnMove> list);
             do_move(move);
             if(!is_check(side, 0))
             {

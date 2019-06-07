@@ -131,10 +131,6 @@ namespace ai
         int index = 0;
         for(auto it = raw_data.begin(); it != raw_data.end(); it++)
         {
-            if(!game.valid_move(*it), 1)
-            {
-                continue;
-            }
             game.do_move(*it);
             int val = minimax(depth -1 , game, -10000, 10000, !black);
             game.undo_move();

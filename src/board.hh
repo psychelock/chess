@@ -37,7 +37,6 @@ namespace board
             bool valid_move(const PgnMove&, bool test = false);
             void create_board(std::string);
             std::list<PgnMove> possible_moves(bool reduce);
-            std::list<PgnMove> reduce_possible(std::list<PgnMove> list);
             void print_possible_moves(const std::list<PgnMove>& moves);
             bool is_check_aux(int pos, int dir, const Color kingcolor, int number);
             bool is_check(Color kingcolor, int position);

@@ -8,7 +8,7 @@
 
 namespace test
 {
-    constexpr char setupknight[] = "n7/3Rb3/1n3R1N/3N4/8/2K1Q3/8/8";
+    constexpr char setupknight[] = "n7/3Rb3/1n3R1N/3N4/8/2K1Q3/8/7k";
 
     TEST(BoardKnight, BoardSetup)
     {
