@@ -231,7 +231,6 @@ namespace board
 
     std::list<PgnMove> ChessBoard::possible_moves(bool reduce)
     {
-        reduce = reduce;
         std::list<PgnMove> moves;
         bool capture = false;
         int dest_int;
@@ -243,7 +242,7 @@ namespace board
                 PieceType pt = piece->first;
                 if(pt != PieceType::PAWN)
                 {
-                    for(int dir = 0; dir < direction[piece_num]; dir++)     
+                    for(int dir = 0; dir < direction[piece_num]; dir++)
                         // each direction the piece can move
                     {
                         dest_int = pos;
@@ -321,7 +320,7 @@ namespace board
                         if(dest_int / 10 == 9 || dest_int / 10 == 2)
                         {
                             currentmove.promotion_set(PieceType::QUEEN);
-                        } 
+                        }
                         moves.insert(moves.end(), currentmove);
                     }
                 }
@@ -329,24 +328,35 @@ namespace board
         }
         if(reduce)
         {
-            for(auto move: moves)
+            auto i = moves.begin();
+            while(i != moves.end())
             {
-                do_move(move);
+                do_move(*i);
+                auto oppcol = Color::WHITE == turn_ ? Color::BLACK : Color::WHITE;
+                if(is_check(oppcol, 0))
+                {
+                    undo_move();
+                    moves.erase(i++);
+                    continue;
+                }
                 if(is_check(turn_, 0))
                 {
                     if(is_checkmate(turn_))
                     {
                         undo_move();
-                        move.report_set(ReportType::CHECKMATE);
+                        (*i).report_set(ReportType::CHECKMATE);
+                        i++;
                         continue;
                     }
                     else
                     {
                         undo_move();
-                        move.report_set(ReportType::CHECK);
+                        (*i).report_set(ReportType::CHECK);
+                        i++;
                         continue;
                     }
                 }
+                i++;
                 undo_move();
             }
         }
