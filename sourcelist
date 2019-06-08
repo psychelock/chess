@@ -21,6 +21,8 @@ set(sources ${sources}
         src/board.cc
         src/parsing.cc
         src/parsing.hh
+        src/perft.cc
+        src/perft.hh
         src/tools.cc
         src/game.hh
         src/game.cc
