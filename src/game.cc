@@ -6,13 +6,13 @@ namespace gameloop
                             ChessBoard board)
     {
         if(i >= list.size())
-            return ai::ai(2, board, Color::BLACK == board.get_turn());
+            return ai::ai(2, board);
         else
             return list.at(i);
     }
 
     int gameloop(ChessBoard board, std::vector<PgnMove> list)
-    {  
+    {
         void *handle = dlopen("../src/given/tests/libbasic-output.so", RTLD_LAZY);
         void *create = dlsym(handle, "listener_create");
         listener::Listener *lis = reinterpret_cast<listener::Listener*(*)()>(create)();
@@ -22,7 +22,7 @@ namespace gameloop
         {
             auto move = get_move(list, i, board);
             i++;
-            if(!board.valid_move(move)) 
+            if(!board.valid_move(move))
             {
                 std::cout << "\nINVALID FIXME\n";
                 break;

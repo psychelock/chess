@@ -5,7 +5,7 @@
 #include "pawntest.hh"
 #include "specialtest.hh"
 #include "queentest.hh"
-
+#include "evaluate.hh"
 int main (int argc, char *argv[])
 {
     testing::InitGoogleTest(&argc, argv);

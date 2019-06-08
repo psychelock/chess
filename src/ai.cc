@@ -3,139 +3,91 @@
 constexpr char init_setup[] = \
                             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
-constexpr double PawnEvalWhite[8][8]=
+constexpr double PawnEval[8][8]=
 {
-    { 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
-    { 5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0},
-    { 1.0,  1.0,  2.0,  3.0,  3.0,  2.0,  1.0,  1.0},
-    { 0.5,  0.5,  1.0,  2.5,  2.5,  1.0,  0.5,  0.5},
-    { 0.0,  0.0,  0.0,  2.0,  2.0,  0.0,  0.0,  0.0},
-    { 0.5, -0.5, -1.0,  0.0,  0.0, -1.0, -0.5,  0.5},
-    { 0.5,  1.0,  1.0, -2.0, -2.0,  1.0,  1.0,  0.5},
-    { 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
-};
-
-constexpr double PawnEvalBlack[8][8]=
-{
-    { 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
-    { 0.5,  1.0, 1.0,  -2.0, -2.0,  1.0,  1.0,  0.5},
-    { 0.5, -0.5, -1.0,  0.0,  0.0, -1.0, -0.5,  0.5},
-    { 0.0,  0.0,  0.0,  2.0,  2.0,  0.0,  0.0,  0.0},
-    { 0.5,  0.5,  1.0,  2.5,  2.5,  1.0,  0.5,  0.5},
-    { 1.0,  1.0,  2.0,  3.0,  3.0,  2.0,  1.0,  1.0},
-    { 5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0},
-    { 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
+    { 0,  0,  0,  0,  0,  0,  0,  0},
+    {50, 50, 50, 50, 50, 50, 50, 50},
+    {10, 10, 20, 30, 30, 20, 10, 10},
+    { 5,  5, 10, 25, 25, 10,  5,  5},
+    { 0,  0,  0, 20, 20,  0,  0,  0},
+    { 5, -5,-10,  0,  0,-10, -5,  5},
+    { 5, 10, 10,-20,-20, 10, 10,  5},
+    { 0,  0,  0,  0,  0,  0,  0,  0}
 };
 
 constexpr double KnightEval[8][8] =
 {
-    {-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0},
-    {-4.0, -2.0,  0.0,  0.5,  0.5,  0.0, -2.0, -4.0},
-    {-3.0,  0.5,  1.0,  1.5,  1.5,  1.0,  0.5, -3.0},
-    {-3.0,  0.0,  1.5,  2.0,  2.0,  1.5,  0.0, -3.0},
-    {-3.0,  0.5,  1.5,  2.0,  2.0,  1.5,  0.5, -3.0},
-    {-3.0,  0.0,  1.0,  1.5,  1.5,  1.0,  0.0, -3.0},
-    {-4.0, -2.0,  0.0,  0.0,  0.0,  0.0, -2.0, -4.0},
-    {-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0}
+    {-50,-40,-30,-30,-30,-30,-40,-50},
+    {-40,-20,  0,  0,  0,  0,-20,-40},
+    {-30,  0, 10, 15, 15, 10,  0,-30},
+    {-30,  5, 15, 20, 20, 15,  5,-30},
+    {-30,  0, 15, 20, 20, 15,  0,-30},
+    {-30,  5, 10, 15, 15, 10,  5,-30},
+    {-40,-20,  0,  5,  5,  0,-20,-40},
+    {-50,-40,-30,-30,-30,-30,-40,-50},
 };
 
-constexpr double BishopEvalWhite[8][8] =
+constexpr double BishopEval[8][8] =
 {
-    {-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0},
-    {-1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0},
-    {-1.0,  0.0,  0.5,  1.0,  1.0,  0.5,  0.0, -1.0},
-    {-1.0,  0.5,  0.5,  1.0,  1.0,  0.5,  0.5, -1.0},
-    {-1.0,  0.0,  1.0,  1.0,  1.0,  1.0,  0.0, -1.0},
-    {-1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0, -1.0},
-    {-1.0,  0.5,  0.0,  0.0,  0.0,  0.0,  0.5, -1.0},
-    {-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0}
+    {-20,-10,-10,-10,-10,-10,-10,-20},
+    {-10,  0,  0,  0,  0,  0,  0,-10},
+    {-10,  0,  5, 10, 10,  5,  0,-10},
+    {-10,  5,  5, 10, 10,  5,  5,-10},
+    {-10,  0, 10, 10, 10, 10,  0,-10},
+    {-10, 10, 10, 10, 10, 10, 10,-10},
+    {-10,  5,  0,  0,  0,  0,  5,-10},
+    {-20,-10,-10,-10,-10,-10,-10,-20},
 };
 
-constexpr double BishopEvalBlack[8][8] =
+constexpr double RookEval[8][8] =
 {
-    {-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0},
-    {-1.0,  0.5,  0.0,  0.0,  0.0,  0.0,  0.5, -1.0},
-    {-1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0, -1.0},
-    {-1.0,  0.0,  1.0,  1.0,  1.0,  1.0,  0.0, -1.0},
-    {-1.0,  0.5,  0.5,  1.0,  1.0,  0.5,  0.5, -1.0},
-    {-1.0,  0.0,  0.5,  1.0,  1.0,  0.5,  0.0, -1.0},
-    {-1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0},
-    {-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0}
-};
-
-
-constexpr double RookEvalWhite[8][8] =
-{
-    {0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
-    {0.5,   1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  0.5},
-    {-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
-    {-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
-    {-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
-    {-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
-    {-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
-    {0.0,   0.0,  0.0,  0.5,  0.5,  0.0,  0.0,  0.0}
-};
-
-constexpr double RookEvalBlack[8][8] =
-{
-    {0.0,   0.0,  0.0,  0.5,  0.5,  0.0,  0.0,  0.0},
-    {-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
-    {-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
-    {-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
-    {-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
-    {-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5},
-    {0.5,   1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  0.5},
-    {0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
+    { 0,  0,  0,  0,  0,  0,  0,  0},
+    { 5, 10, 10, 10, 10, 10, 10,  5},
+    {-5,  0,  0,  0,  0,  0,  0, -5},
+    {-5,  0,  0,  0,  0,  0,  0, -5},
+    {-5,  0,  0,  0,  0,  0,  0, -5},
+    {-5,  0,  0,  0,  0,  0,  0, -5},
+    {-5,  0,  0,  0,  0,  0,  0, -5},
+    { 0,  0,  0,  5,  5,  0,  0,  0}
 };
 
 constexpr double QueenEval[8][8] =
 {
-    {-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0},
-    {-1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0},
-    {-1.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0},
-    {-0.5,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5},
-    { 0.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5},
-    {-1.0,  0.5,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0},
-    {-1.0,  0.0,  0.5,  0.0,  0.0,  0.0,  0.0, -1.0},
-    {-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0}
+    {-20,-10,-10, -5, -5,-10,-10,-20},
+    {-10,  0,  0,  0,  0,  0,  0,-10},
+    {-10,  0,  5,  5,  5,  5,  0,-10},
+    { -5,  0,  5,  5,  5,  5,  0, -5},
+    {  0,  0,  5,  5,  5,  5,  0, -5},
+    {-10,  5,  5,  5,  5,  5,  0,-10},
+    {-10,  0,  5,  0,  0,  0,  0,-10},
+    {-20,-10,-10, -5, -5,-10,-10,-20}
+
 };
 
-constexpr double KingEvalWhite[8][8] =
+constexpr double KingEval[8][8] =
 {
-    {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
-    {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
-    {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
-    {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
-    {-2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0},
-    {-1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0},
-    { 2.0,  2.0,  0.0,  0.0,  0.0,  0.0,  2.0,  2.0},
-    { 2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0}
-};
-
-constexpr double KingEvalBlack[8][8] =
-{
-    { 2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0},
-    { 2.0,  2.0,  0.0,  0.0,  0.0,  0.0,  2.0,  2.0},
-    {-1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0},
-    {-2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0},
-    {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
-    {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
-    {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
-    {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0}
+    {-30,-40,-40,-50,-50,-40,-40,-30},
+    {-30,-40,-40,-50,-50,-40,-40,-30},
+    {-30,-40,-40,-50,-50,-40,-40,-30},
+    {-30,-40,-40,-50,-50,-40,-40,-30},
+    {-20,-30,-30,-40,-40,-30,-30,-20},
+    {-10,-20,-20,-20,-20,-20,-20,-10},
+    { 20, 20,  0,  0,  0,  0, 20, 20},
+    { 20, 30, 10,  0,  0, 10, 30, 20}
 };
 
 namespace ai
 {
-    board::PgnMove ai (int depth, board::ChessBoard game, bool black)
+    board::PgnMove ai (int depth, board::ChessBoard game)
     {
         auto raw_data = game.possible_moves(true);
-        int bestmove = -9999;
+        int bestmove = -99999999;
         int i = 0;
         int index = 0;
         for(auto it = raw_data.begin(); it != raw_data.end(); it++)
         {
             game.do_move(*it);
-            int val = minimax(depth -1 , game, -10000, 10000, !black);
+            int val = -alphabeta(-10000, 10000, depth -1,  game);
             game.undo_move();
             if(val >= bestmove)
             {
@@ -148,41 +100,66 @@ namespace ai
         return move;
     }
 
-    int minimax(int depth, board::ChessBoard game, int alpha, int beta, bool black)
+    int alphabeta(int alpha, int beta, int depth, ChessBoard game)
     {
+        int best = -99999999;
         if(depth == 0)
         {
-            return  -evalBoard(game); //FIXME
+            if(Color::BLACK == game.get_turn())
+                return -evalBoard(game);
+            else
+                return evalBoard(game);
         }
         auto raw = game.possible_moves(true);
-        if(black) // Maximizing for black pieces
+        if(raw.size() == 0) // pat or a mat
         {
-            int best = -9999;
-            for(auto move : raw)
+            if(game.is_check(game.get_turn(), 0))
+                return best - depth;
+            else
+                return 0;
+        }
+        for(auto move : raw)
+        {
+            game.do_move(move);
+            auto score = -alphabeta(-beta, -alpha, depth-1, game);
+            game.undo_move();
+            if(score >= beta)
+                return score;
+            if(score > best)
+            {
+                best = score;
+                if(score > alpha)
+                    alpha = score;
+            }
+        }
+        return best;
+    }
+
+    int quiesce(int alpha, int beta, ChessBoard game)
+    {
+        int stand_pat = evalBoard(game);
+        if(Color::BLACK == game.get_turn())
+            stand_pat = -stand_pat;
+
+        if(stand_pat >= beta)
+            return beta;
+        if(alpha < stand_pat)
+            return stand_pat;
+        auto raw = game.possible_moves(true);
+        for(auto move : raw)
+        {
+            if(move.get_capture())
             {
                 game.do_move(move);
-                best = std::max(best, minimax(depth-1, game, alpha, beta, !black));
+                auto score = -quiesce( -beta, -alpha, game);
                 game.undo_move();
-                alpha = std::max(alpha, best);
-                if(beta <= alpha)
-                    return best;
+                if(score >= beta)
+                    return beta;
+                if(score > alpha)
+                    alpha = score;
             }
-            return best;
         }
-        else // Minizing for white pieces
-        {
-            int best = 9999;
-            for(auto move : raw)
-            {
-                game.do_move(move);
-                best = std::min(best, minimax(depth-1, game, alpha, beta, !black));
-                game.undo_move();
-                beta = std::min(beta, best);
-                if(beta <= alpha)
-                    return best;
-            }
-            return best;
-        }
+        return alpha;
     }
 
     int evalBoard(board::ChessBoard game)
@@ -195,7 +172,7 @@ namespace ai
                 auto pt = square.value();
                 int i = 9 - (pos/10);
                 int j = (pos % 10 ) - 1;
-                total += getPieceValue(pt, i , j);
+                total += getPieceValue(pt, i, j);
             }
         }
         return total;
@@ -207,25 +184,26 @@ namespace ai
         switch(pt.first)
         {
             case (PieceType::PAWN):
-                val =  10 + ((pt.second == Color::WHITE) ? PawnEvalWhite[y][x] : PawnEvalBlack[y][x]);
+                val =  100 + ((pt.second == Color::WHITE) ? PawnEval[x][y] : PawnEval[7-x][y]);
                 break;
             case (PieceType::ROOK):
-                val =  50 + ((pt.second == Color::WHITE) ? RookEvalWhite[y][x] : RookEvalBlack[y][x] );
+                val =  500 + ((pt.second == Color::WHITE) ? RookEval[x][y] : RookEval[7-x][y] );
                 break;
             case (PieceType::KNIGHT):
-                val =  30 + KnightEval[y][x];
+                val =  320 + KnightEval[x][y];
                 break;
             case (PieceType::BISHOP):
-                val =  30 + ((pt.second == Color::WHITE) ? BishopEvalWhite[y][x] : BishopEvalBlack[y][x] );
+                val =  330 + ((pt.second == Color::WHITE) ? BishopEval[x][y] : BishopEval[7-x][y] );
                 break;
             case (PieceType::QUEEN):
-                val =  90 + QueenEval[y][x];
+                val =  900 + QueenEval[x][y];
                 break;
             default:
-                val =  900 + ((pt.second == Color::WHITE) ? KingEvalWhite[y][x] : KingEvalBlack[y][x] );
+                val =  20000 + ((pt.second == Color::WHITE) ? KingEval[x][y] : KingEval[7-x][y] );
                 break;
         }
-        return (pt.second == Color::WHITE) ? val : -val;
+        val = (Color::WHITE == pt.second) ? val : -val;
+        return val;
     }
 
     static File get_file_string(char a)
@@ -377,13 +355,10 @@ namespace ai
         while(true)
         {
             auto str = ai::get_board();
-            std::cerr << str;
             auto game = parse_uci(str);
-            auto move = ai(2, game, game.get_turn() == Color::BLACK);
+            auto move = ai(2, game);
             res = res + (tools::string_from_pos(move.get_start()));
             res = res + (tools::string_from_pos(move.get_end()));
-            std::cerr << move;
-            std::cerr << "string : " << res << "\n";
             ai::play_move(res);
             game.calculate_moves(true);
             game.do_move(move);

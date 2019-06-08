@@ -188,8 +188,11 @@ namespace board
             {
                 if(side == -1 && board_.at(pos-3) != std::nullopt)
                     return std::nullopt;
-                if(!(is_check(turn_, pos+(1*side))) &&\
-                        !(is_check(turn_, pos+(2*side))))
+                if(
+                        !(is_check(turn_, pos+(1*side))) &&\
+                        !(is_check(turn_, pos+(2*side))) &&\
+                        !(is_check(turn_, pos))
+                    )
                 {
                     auto to = tools::get_position(pos+(2*side));
                     auto from = tools::get_position(pos);
@@ -460,14 +463,22 @@ namespace board
                     auto rook = board_[rookfrompos];
                     board_[rookfrompos] = std::nullopt;
                     board_[rooktopos] = rook;
+                    if(from == 25)
+                        en_passant_.erase(std::remove(en_passant_.begin(),en_passant_.end(), 'K'), en_passant_.end());
+                    else
+                        en_passant_.erase(std::remove(en_passant_.begin(),en_passant_.end(), 'k'), en_passant_.end());
                 }
                 else if(to == 23 || to == 93)
-                { 
+                {
                     int rookfrompos = (to == 23) ? 21 : 91;
                     int rooktopos = (to == 23) ? 24 : 94;
                     auto rook = board_[rookfrompos];
                     board_[rookfrompos] = std::nullopt;
                     board_[rooktopos] = rook;
+                    if(from == 25)
+                        en_passant_.erase(std::remove(en_passant_.begin(),en_passant_.end(), 'Q'), en_passant_.end());
+                    else
+                        en_passant_.erase(std::remove(en_passant_.begin(),en_passant_.end(), 'q'), en_passant_.end());
                 }
             }
         }
