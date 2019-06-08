@@ -11,7 +11,7 @@ constexpr double PawnEvalWhite[8][8]=
     { 0.5,  0.5,  1.0,  2.5,  2.5,  1.0,  0.5,  0.5},
     { 0.0,  0.0,  0.0,  2.0,  2.0,  0.0,  0.0,  0.0},
     { 0.5, -0.5, -1.0,  0.0,  0.0, -1.0, -0.5,  0.5},
-    { 0.5,  1.0, 1.0,  -2.0, -2.0,  1.0,  1.0,  0.5},
+    { 0.5,  1.0,  1.0, -2.0, -2.0,  1.0,  1.0,  0.5},
     { 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
 };
 
@@ -145,29 +145,15 @@ namespace ai
             i++;
         }
         auto move =  *(std::next(raw_data.begin(), index));
-        auto oppcol = (Color::WHITE == game.get_turn()) ? Color::BLACK : Color::WHITE;
-
-        game.do_move(move);
-        if(game.is_check(oppcol, 0))
-        {
-            if(game.is_checkmate(oppcol))
-            {
-                game.undo_move();
-                move.report_set(ReportType::CHECKMATE);
-            }
-            else
-            {
-                game.undo_move();
-                move.report_set(ReportType::CHECK);
-            }
-        }
         return move;
     }
 
     int minimax(int depth, board::ChessBoard game, int alpha, int beta, bool black)
     {
         if(depth == 0)
-            return evalBoard(game);
+        {
+            return  -evalBoard(game); //FIXME
+        }
         auto raw = game.possible_moves(true);
         if(black) // Maximizing for black pieces
         {
@@ -388,18 +374,15 @@ namespace ai
     {
         std::string res = "";
         ai::init("Mithun");
-        std::cerr << "\nbefore setup\n";
-        auto str = ai::get_board();
-        std::cerr << str;
-        auto game = parse_uci(str);
-        std::cerr << "\nafter setup\n";
         while(true)
         {
-            std::cerr << "in loop\n";
+            auto str = ai::get_board();
+            std::cerr << str;
+            auto game = parse_uci(str);
             auto move = ai(2, game, game.get_turn() == Color::BLACK);
             res = res + (tools::string_from_pos(move.get_start()));
             res = res + (tools::string_from_pos(move.get_end()));
-            std::cerr << move << "\n";
+            std::cerr << move;
             std::cerr << "string : " << res << "\n";
             ai::play_move(res);
             game.calculate_moves(true);
